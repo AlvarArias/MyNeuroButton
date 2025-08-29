@@ -20,7 +20,7 @@ final class MyNeuroBUttons: XCTestCase {
     func testButtonAction() {
         var actionWasCalled = false
 
-        let button = MyNeuroButton(icon: "star", icon_full: "star.full", fillColor: Color.blue, button_height: 100, button_width: 100, action: {
+        let button = MyNeuroButton(icon: "star", iconFull: "star.full", fillColor: Color.blue, height: 100, width: 100, action: {
             actionWasCalled = true
         })
 
