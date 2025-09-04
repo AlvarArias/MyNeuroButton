@@ -1,4 +1,4 @@
-# MyNeuroButton
+# Neuro Button
 
 A customizable SwiftUI button component with beautiful neumorphic design and smooth animations.
 
