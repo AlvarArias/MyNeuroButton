@@ -1,68 +1,49 @@
-
 import SwiftUI
 
-/// A customizable button with neumorphic design and SF Symbol icon support.
-///
-/// MyNeuroButton provides a modern neumorphic-style button with smooth animations,
-/// customizable colors, and support for SF Symbols. The button features a pressed
-/// state with visual feedback and haptic-like shadows.
-///
-/// Example usage:
-/// ```swift
-/// MyNeuroButton(
-///     icon: "star",
-///     iconFilled: "star.fill",
-///     fillColor: .blue,
-///     width: 100,
-///     height: 100
-/// ) {
-///     print("Button tapped!")
-/// }
-/// ```
+/// Neumorphic-styled SwiftUI button with SF Symbol support and press animation.
+@MainActor
 public struct MyNeuroButton: View {
-    
+
     // MARK: - Private Properties
-    
+
     @State private var isPressed = false
-   
+
     // MARK: - Public Properties
-    
-    /// The SF Symbol name to display when the button is not pressed
+
+    /// SF Symbol name for the normal (unpressed) state
     public let icon: String
-    
-    /// The SF Symbol name to display when the button is pressed
+
+    /// SF Symbol name for the pressed state
     public let iconFilled: String
-    
-    /// The background color when the button is pressed
+
+    /// Background color when the button is pressed
     public let fillColor: Color
-    
-    /// The width of the button
+
+    /// Button width in points
     public let width: CGFloat
-    
-    /// The height of the button
+
+    /// Button height in points
     public let height: CGFloat
-    
-    /// The action to perform when the button is tapped
-    public let action: () -> Void
-    
+
+    /// Action executed on tap
+    public let action: @MainActor () -> Void
+
     // MARK: - Initialization
-    
-    /// Creates a neumorphic button with customizable appearance and behavior.
-    ///
+
     /// - Parameters:
     ///   - icon: SF Symbol name for the normal state
     ///   - iconFilled: SF Symbol name for the pressed state
-    ///   - fillColor: Background color when pressed (default: .blue)
-    ///   - width: Button width in points (default: 100)
-    ///   - height: Button height in points (default: 100)
-    ///   - action: Closure to execute when the button is tapped
+    ///   - fillColor: Background color when pressed (default: `.blue`)
+    ///   - width: Button width in points (default: `100`)
+    ///   - height: Button height in points (default: `100`)
+    ///   - action: Closure executed when tapped
     public init(
         icon: String,
         iconFilled: String,
         fillColor: Color = .blue,
         width: CGFloat = 100,
         height: CGFloat = 100,
-        action: @escaping () -> Void
+        action: @escaping @MainActor () -> Void
     ) {
         self.icon = icon
         self.iconFilled = iconFilled
@@ -71,18 +52,7 @@ public struct MyNeuroButton: View {
         self.height = height
         self.action = action
     }
-    
-    /// Creates a neumorphic button with legacy parameter names for backward compatibility.
-    ///
-    /// - Note: This initializer is deprecated. Use `init(icon:iconFilled:fillColor:width:height:action:)` instead.
-    ///
-    /// - Parameters:
-    ///   - icon: SF Symbol name for the normal state
-    ///   - iconFull: SF Symbol name for the pressed state
-    ///   - fillColor: Background color when pressed (default: .blue)
-    ///   - height: Button height in points (default: 100)
-    ///   - width: Button width in points (default: 100)
-    ///   - action: Closure to execute when the button is tapped
+
     @available(*, deprecated, message: "Use init(icon:iconFilled:fillColor:width:height:action:) instead")
     public init(
         icon: String,
@@ -90,7 +60,7 @@ public struct MyNeuroButton: View {
         fillColor: Color = .blue,
         height: CGFloat = 100,
         width: CGFloat = 100,
-        action: @escaping () -> Void
+        action: @escaping @MainActor () -> Void
     ) {
         self.init(
             icon: icon,
@@ -101,18 +71,17 @@ public struct MyNeuroButton: View {
             action: action
         )
     }
-    
 
     // MARK: - Body
-    
+
     public var body: some View {
         Button(action: action) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(isPressed ? fillColor : Color.neumorphicBackground)
-                
+
                 Image(systemName: isPressed ? iconFilled : icon)
-                    .foregroundColor(isPressed ? .white : .neumorphicForeground)
+                    .foregroundStyle(isPressed ? .white : Color.neumorphicForeground)
                     .font(.title2)
             }
             .frame(width: width, height: height)
@@ -130,7 +99,7 @@ public struct MyNeuroButton: View {
                 y: isPressed ? -2 : -5
             )
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
             withAnimation(.easeInOut(duration: 0.1)) {
                 isPressed = pressing
@@ -142,10 +111,9 @@ public struct MyNeuroButton: View {
 // MARK: - Color Extensions
 
 public extension Color {
-    /// The default background color for neumorphic design
+    /// Light grey-blue background for neumorphic design
     static let neumorphicBackground = Color(red: 225 / 255, green: 225 / 255, blue: 235 / 255)
-    
-    /// The default foreground color for neumorphic design
+
+    /// Medium grey foreground for neumorphic design
     static let neumorphicForeground = Color(red: 100 / 255, green: 100 / 255, blue: 110 / 255)
 }
-
