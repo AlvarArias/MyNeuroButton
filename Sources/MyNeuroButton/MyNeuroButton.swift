@@ -1,4 +1,5 @@
 import SwiftUI
+import NeumorphicCore
 
 /// Neumorphic-styled SwiftUI button with SF Symbol support and press animation.
 @MainActor
@@ -106,14 +107,4 @@ public struct MyNeuroButton: View {
             }
         }, perform: {})
     }
-}
-
-// MARK: - Color Extensions
-
-public extension Color {
-    /// Light grey-blue background for neumorphic design
-    static let neumorphicBackground = Color(red: 225 / 255, green: 225 / 255, blue: 235 / 255)
-
-    /// Medium grey foreground for neumorphic design
-    static let neumorphicForeground = Color(red: 100 / 255, green: 100 / 255, blue: 110 / 255)
 }

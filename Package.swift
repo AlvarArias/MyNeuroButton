@@ -15,6 +15,7 @@ let package = Package(
     targets: [
         .target(name: "NeumorphicCore"),
         .target(name: "MyNeuroButton", dependencies: ["NeumorphicCore"]),
+        .testTarget(name: "NeumorphicCoreTests", dependencies: ["NeumorphicCore"]),
         .testTarget(name: "MyNeuroButtonTests", dependencies: ["MyNeuroButton"])
     ]
 )
