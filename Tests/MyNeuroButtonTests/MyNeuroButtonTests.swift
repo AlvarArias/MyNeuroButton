@@ -1,5 +1,6 @@
 import SwiftUI
 import XCTest
+import NeumorphicCore
 @testable import MyNeuroButton
 
 @MainActor
@@ -41,6 +42,19 @@ final class MyNeuroButtonTests: XCTestCase {
         XCTAssertEqual(button.fillColor, .blue)
         XCTAssertEqual(button.width, 100)
         XCTAssertEqual(button.height, 100)
+    }
+
+    func testButtonUsesDefaultTheme() {
+        let button = MyNeuroButton(icon: "star", iconFilled: "star.fill") {}
+        XCTAssertEqual(button.theme.cornerRadius, NeumorphicTheme.default.cornerRadius)
+        XCTAssertEqual(button.theme.animationDuration, NeumorphicTheme.default.animationDuration)
+    }
+
+    func testButtonCustomTheme() {
+        let custom = NeumorphicTheme(cornerRadius: 20, normalShadowRadius: 15)
+        let button = MyNeuroButton(icon: "star", iconFilled: "star.fill", theme: custom) {}
+        XCTAssertEqual(button.theme.cornerRadius, 20)
+        XCTAssertEqual(button.theme.normalShadowRadius, 15)
     }
 
     func testBackwardCompatibilityInitializer() {

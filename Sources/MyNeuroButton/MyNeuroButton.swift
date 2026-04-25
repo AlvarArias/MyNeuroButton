@@ -26,24 +26,21 @@ public struct MyNeuroButton: View {
     /// Button height in points
     public let height: CGFloat
 
+    /// Design tokens controlling shadows, corner radius, and animation
+    public let theme: NeumorphicTheme
+
     /// Action executed on tap
     public let action: @MainActor () -> Void
 
     // MARK: - Initialization
 
-    /// - Parameters:
-    ///   - icon: SF Symbol name for the normal state
-    ///   - iconFilled: SF Symbol name for the pressed state
-    ///   - fillColor: Background color when pressed (default: `.blue`)
-    ///   - width: Button width in points (default: `100`)
-    ///   - height: Button height in points (default: `100`)
-    ///   - action: Closure executed when tapped
     public init(
         icon: String,
         iconFilled: String,
         fillColor: Color = .blue,
         width: CGFloat = 100,
         height: CGFloat = 100,
+        theme: NeumorphicTheme = .default,
         action: @escaping @MainActor () -> Void
     ) {
         self.icon = icon
@@ -51,10 +48,11 @@ public struct MyNeuroButton: View {
         self.fillColor = fillColor
         self.width = width
         self.height = height
+        self.theme = theme
         self.action = action
     }
 
-    @available(*, deprecated, message: "Use init(icon:iconFilled:fillColor:width:height:action:) instead")
+    @available(*, deprecated, message: "Use init(icon:iconFilled:fillColor:width:height:theme:action:) instead")
     public init(
         icon: String,
         iconFull: String,
@@ -78,31 +76,19 @@ public struct MyNeuroButton: View {
     public var body: some View {
         Button(action: action) {
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(isPressed ? fillColor : Color.neumorphicBackground)
+                RoundedRectangle(cornerRadius: theme.cornerRadius)
+                    .fill(isPressed ? fillColor : theme.background)
 
                 Image(systemName: isPressed ? iconFilled : icon)
-                    .foregroundStyle(isPressed ? .white : Color.neumorphicForeground)
+                    .foregroundStyle(isPressed ? .white : theme.foreground)
                     .font(.title2)
             }
             .frame(width: width, height: height)
-            .scaleEffect(isPressed ? 0.95 : 1.0)
-            .shadow(
-                color: Color.black.opacity(isPressed ? 0.1 : 0.3),
-                radius: isPressed ? 5 : 10,
-                x: isPressed ? 5 : 10,
-                y: isPressed ? 5 : 10
-            )
-            .shadow(
-                color: Color.white.opacity(isPressed ? 0.4 : 0.8),
-                radius: isPressed ? 5 : 10,
-                x: isPressed ? -2 : -5,
-                y: isPressed ? -2 : -5
-            )
+            .neumorphicSurface(theme: theme, isPressed: isPressed)
         }
         .buttonStyle(.plain)
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            withAnimation(.easeInOut(duration: 0.1)) {
+            withAnimation(.easeInOut(duration: theme.animationDuration)) {
                 isPressed = pressing
             }
         }, perform: {})
