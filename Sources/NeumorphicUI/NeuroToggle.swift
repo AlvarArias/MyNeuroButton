@@ -73,10 +73,14 @@ public struct NeuroToggle: View {
             .neumorphicSurface(theme: theme, isPressed: isPressed || isOn)
         }
         .buttonStyle(.plain)
+        #if !os(tvOS)
+        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
+        // engine provides feedback there and `action` fires on select.
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
             withAnimation(.easeInOut(duration: theme.animationDuration)) {
                 isPressed = pressing
             }
         }, perform: {})
+        #endif
     }
 }
