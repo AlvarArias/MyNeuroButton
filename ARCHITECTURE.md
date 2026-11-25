@@ -2,7 +2,7 @@
 
 ## Targets y dependencias
 ```
-NeumorphicCore   (sin deps)   tokens, ViewModifiers, Color
+NeumorphicCore   (sin deps)   tokens, ViewModifiers, Color, NeuroPressable
       ↑
       ├── NeumorphicUI        componentes nuevos
       └── MyNeuroButton       legacy (compat)

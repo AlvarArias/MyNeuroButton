@@ -30,7 +30,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
 - [ ] T-016 README con galería + release
 - [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
-- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de la Fase 1
+- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 y 2 (incluye `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona)
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
