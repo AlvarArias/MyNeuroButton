@@ -16,7 +16,8 @@ Reglas:
 ## Piezas clave
 - `NeumorphicTheme` (struct `Sendable`): fondo, foreground, radios, duración de animación, radios de sombra.
 - `NeumorphicSurface`: superficie elevada/presionada (escala + par de sombras).
-- Previsto: `NeumorphicInset` (superficie hundida), tema por `Environment`, `NeuroPressable` interno.
+- `NeumorphicInset`: superficie hundida (sombra interior). Para TextField, Slider y Progress.
+- Previsto: tema por `Environment`, `NeuroPressable` interno.
 
 ## Patrón de componente
 `@MainActor struct Neuro<Nombre>: View`, parámetro `theme`, estado de presión con `onLongPressGesture(minimumDuration: 0)` (no `ButtonStyle`), estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
@@ -25,8 +26,10 @@ Reglas:
 ### ADR-001 — Core separado de UI
 Estado: aceptada. Los tokens y modifiers viven aparte para reutilizarlos sin arrastrar componentes.
 
-### ADR-002 — Modifier de sombra interior (pendiente, T-003)
+### ADR-002 — Modifier de sombra interior (aceptada, T-003)
 Los componentes "hundidos" (TextField, Slider, Progress) necesitan un modifier inset en Core en vez de sombras propias.
+Decisión: `NeumorphicInset` (ViewModifier) + `View.neumorphicInset(theme:)`. Pinta como fondo del contenido un `RoundedRectangle(theme.cornerRadius)` relleno con `theme.background`, con dos trazos desenfocados y recortados a la forma: oscuro desplazado hacia dentro desde arriba-izquierda, claro desde abajo-derecha. Es el espejo de `NeumorphicSurface`.
+Nuevo token `NeumorphicTheme.insetShadowRadius` (por defecto 5), añadido al final del `init` con valor por defecto, sin romper llamadas existentes. El desplazamiento es `insetShadowRadius / 2`.
 
 ### ADR-003 — Tema por Environment (pendiente, T-004)
 Evita pasar `theme:` a cada componente en una app; `theme:` explícito queda como override.

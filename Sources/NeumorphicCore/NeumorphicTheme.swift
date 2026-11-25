@@ -9,6 +9,7 @@ public struct NeumorphicTheme: Sendable {
     public var animationDuration: Double
     public var normalShadowRadius: CGFloat
     public var pressedShadowRadius: CGFloat
+    public var insetShadowRadius: CGFloat
 
     public init(
         background: Color = Color(red: 225 / 255, green: 225 / 255, blue: 235 / 255),
@@ -16,7 +17,8 @@ public struct NeumorphicTheme: Sendable {
         cornerRadius: CGFloat = 10,
         animationDuration: Double = 0.1,
         normalShadowRadius: CGFloat = 10,
-        pressedShadowRadius: CGFloat = 5
+        pressedShadowRadius: CGFloat = 5,
+        insetShadowRadius: CGFloat = 5
     ) {
         self.background = background
         self.foreground = foreground
@@ -24,6 +26,7 @@ public struct NeumorphicTheme: Sendable {
         self.animationDuration = animationDuration
         self.normalShadowRadius = normalShadowRadius
         self.pressedShadowRadius = pressedShadowRadius
+        self.insetShadowRadius = insetShadowRadius
     }
 
     public static let `default` = NeumorphicTheme()

@@ -47,4 +47,40 @@ final class NeumorphicCoreTests: XCTestCase {
         let surface = NeumorphicSurface(theme: custom, isPressed: true)
         XCTAssertEqual(surface.theme.pressedShadowRadius, 3)
     }
+
+    // MARK: - Inset
+
+    func testThemeInsetShadowRadiusDefault() {
+        XCTAssertEqual(NeumorphicTheme.default.insetShadowRadius, 5)
+    }
+
+    func testThemeInsetShadowRadiusOverride() {
+        XCTAssertEqual(NeumorphicTheme(insetShadowRadius: 8).insetShadowRadius, 8)
+    }
+
+    func testExistingThemeInitCallsStillWork() {
+        let theme = NeumorphicTheme(pressedShadowRadius: 3)
+        XCTAssertEqual(theme.pressedShadowRadius, 3)
+        XCTAssertEqual(theme.insetShadowRadius, 5)
+    }
+
+    func testNeumorphicInsetStoresTheme() {
+        let inset = NeumorphicInset(theme: NeumorphicTheme(cornerRadius: 20))
+        XCTAssertEqual(inset.theme.cornerRadius, 20)
+    }
+
+    func testNeumorphicInsetUsesDefaultTheme() {
+        XCTAssertEqual(NeumorphicInset().theme.insetShadowRadius, NeumorphicTheme.default.insetShadowRadius)
+    }
+
+    func testNeumorphicInsetShadowOffsetIsHalfTheRadius() {
+        let inset = NeumorphicInset(theme: NeumorphicTheme(insetShadowRadius: 12))
+        XCTAssertEqual(inset.shadowOffset, 6)
+    }
+
+    func testNeumorphicInsetRendersAnImage() {
+        let view = Text("Hi").frame(width: 80, height: 40).neumorphicInset()
+        let renderer = ImageRenderer(content: view)
+        XCTAssertNotNil(renderer.cgImage)
+    }
 }

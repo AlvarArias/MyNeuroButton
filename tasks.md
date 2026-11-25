@@ -15,7 +15,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Verificado compilando `MyNeuroUI-Package` para iOS Simulator, tvOS Simulator y macOS con mínimos iOS 15/macOS 12/tvOS 15, 16/13/16 y 17/14/17: los tres compilan.
   - Para T-004: `@Entry` requiere Xcode 16+ pero hace back-deploy.
 - [x] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004 (`feat/T-002-platform-minimum`): iOS 17 / macOS 14 / tvOS 17, visionOS no por ahora
-- [ ] T-003 `NeumorphicInset` en Core + tests + ADR-002
+- [x] T-003 `NeumorphicInset` en Core + tests + ADR-002 (`feat/T-003-neumorphic-inset`)
 - [ ] T-004 Tema por `Environment` + ADR-003
 - [ ] T-005 Modo oscuro en `NeumorphicTheme`
 - [ ] T-006 Extraer `NeuroPressable`
