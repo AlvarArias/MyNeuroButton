@@ -19,7 +19,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-004 Tema por `Environment` + ADR-003 (`feat/T-004-theme-environment`)
 - [x] T-005 Modo oscuro en `NeumorphicTheme` (`feat/T-005-dark-mode`)
 - [x] T-006 Extraer `NeuroPressable` (`feat/T-006-neuro-pressable`)
-- [ ] T-007 `NeuroCard`
+- [x] T-007 `NeuroCard` (`feat/T-007-neuro-card`)
 - [ ] T-008 `NeuroBadge` / `NeuroDivider`
 - [ ] T-009 `NeuroProgress`
 - [ ] T-010 `NeuroSlider`
