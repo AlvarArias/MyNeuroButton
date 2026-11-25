@@ -120,4 +120,19 @@ final class NeuroProgressTests: XCTestCase {
         XCTAssertEqual(image.width, 50)
         XCTAssertEqual(image.height, 50)
     }
+
+    // MARK: - RingShape
+
+    func testRingShapeHasAnEmptyHole() {
+        let rect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        let path = RingShape(thickness: 10).path(in: rect)
+        XCTAssertFalse(path.contains(CGPoint(x: 50, y: 50)), "centre must be a hole")
+        XCTAssertTrue(path.contains(CGPoint(x: 50, y: 5)), "point on the ring must be filled")
+        XCTAssertFalse(path.contains(CGPoint(x: 1, y: 1)), "outside the circle must be empty")
+    }
+
+    func testRingShapeWithThicknessAtLeastRadiusIsADisc() {
+        let rect = CGRect(x: 0, y: 0, width: 100, height: 100)
+        XCTAssertTrue(RingShape(thickness: 60).path(in: rect).contains(CGPoint(x: 50, y: 50)))
+    }
 }

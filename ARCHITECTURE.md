@@ -31,6 +31,7 @@ Estado: aceptada. Los tokens y modifiers viven aparte para reutilizarlos sin arr
 Los componentes "hundidos" (TextField, Slider, Progress) necesitan un modifier inset en Core en vez de sombras propias.
 Decisión: `NeumorphicInset` (ViewModifier) + `View.neumorphicInset(theme:)`. Pinta como fondo del contenido un `RoundedRectangle(theme.cornerRadius)` relleno con `theme.background`, con dos trazos desenfocados y recortados a la forma: oscuro desplazado hacia dentro desde arriba-izquierda, claro desde abajo-derecha. Es el espejo de `NeumorphicSurface`.
 Nuevo token `NeumorphicTheme.insetShadowRadius` (por defecto 5), añadido al final del `init` con valor por defecto, sin romper llamadas existentes. El desplazamiento es `insetShadowRadius / 2`.
+Enmienda (T-019): `NeumorphicInset` es genérico sobre la forma (`S: Shape`). `.neumorphicInset(theme:)` sigue usando `RoundedRectangle(theme.cornerRadius)`; `.neumorphicInset(in: shape, theme:)` acepta cualquier forma (`Capsule`, un anillo...). Ningún componente dibuja sombras interiores por su cuenta ni copia el tema para cambiar `cornerRadius`; si necesita otra forma, la pasa aquí. Resuelve los hallazgos de la revisión independiente sobre `NeuroProgress`.
 
 ### ADR-003 — Tema por Environment (aceptada, T-004)
 Evita pasar `theme:` a cada componente en una app; `theme:` explícito queda como override.

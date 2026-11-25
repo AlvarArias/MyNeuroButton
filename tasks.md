@@ -40,7 +40,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 
 ## Hallazgos de la revisión independiente de T-007 a T-009 (pendientes de decisión)
 Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor < 4, 0 o negativo; anillo más grueso que su marco), icono del badge oculto a VoiceOver, documentación `///` de los inits públicos y aviso de recorte de sombras.
-- [ ] T-019 **Decidir** API de Core para el anillo: hoy `NeuroProgress.grooveShadows` dibuja sombras interiores a mano (duplica opacidades y offset de `NeumorphicInset`, contra ADR-002). Opciones: `neumorphicInset(theme:shape:)` genérico en Core, o un ADR que justifique la excepción.
+- [x] T-019 (`feat/T-019-inset-shape`, opción genérico en Core) API de Core para el anillo: hoy `NeuroProgress.grooveShadows` dibuja sombras interiores a mano (duplica opacidades y offset de `NeumorphicInset`, contra ADR-002). Opciones: `neumorphicInset(theme:shape:)` genérico en Core, o un ADR que justifique la excepción.
 - [ ] T-020 **Decidir** convención de la propiedad `theme`: `NeuroToggle`/`MyNeuroButton` exponen `NeumorphicTheme` no opcional (ADR-003); los 4 componentes nuevos exponen `NeumorphicTheme?`. Unificar y registrarlo en ADR-003.
 - [ ] T-021 **Decidir** si se hace público un único helper de resolución de tema en Core (hoy `theme ?? environmentTheme` se repite en 4 componentes; `NeuroPressable.resolve` es interno).
 - [ ] T-022 Constantes mágicas: tope de sombra del badge (4), opacidades 0.25/0.8 del divider y 0.3/0.8 de las sombras. Pasarlas a tokens o a una única fuente en Core. Valorar `cornerRadius:` explícito en `neumorphicInset` en vez de copiar el tema (ligado a T-019).

@@ -90,9 +90,6 @@ public struct NeuroProgress: View {
     // MARK: - Private Views
 
     private func bar(_ resolved: NeumorphicTheme) -> some View {
-        var capsule = resolved
-        capsule.cornerRadius = thickness / 2
-
         let inset: CGFloat = 2
         let fillHeight = max(thickness - inset * 2, 0)
 
@@ -101,7 +98,7 @@ public struct NeuroProgress: View {
             let fillWidth = fraction > 0 ? max(innerWidth * fraction, fillHeight) : 0
 
             ZStack(alignment: .leading) {
-                Color.clear.neumorphicInset(theme: capsule)
+                Color.clear.neumorphicInset(in: Capsule(), theme: resolved)
 
                 Capsule()
                     .fill(tint)
@@ -118,42 +115,35 @@ public struct NeuroProgress: View {
             let line = min(thickness, min(proxy.size.width, proxy.size.height) / 2)
 
             ZStack {
-                Circle()
-                    .stroke(resolved.background, lineWidth: line)
-                    .overlay { grooveShadows(resolved, thickness: line) }
+                Color.clear.neumorphicInset(in: RingShape(thickness: line), theme: resolved)
 
                 Circle()
+                    .inset(by: line / 2)
                     .trim(from: 0, to: fraction)
                     .stroke(tint, style: StrokeStyle(lineWidth: line, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                     .opacity(fraction > 0 ? 1 : 0)
             }
-            .padding(line / 2)
         }
         .aspectRatio(1, contentMode: .fit)
     }
+}
 
-    /// Inner shadows of the ring track. They hug both walls of the groove (outer and inner edge)
-    /// and are masked to the track so nothing spills outside it.
-    private func grooveShadows(_ resolved: NeumorphicTheme, thickness line: CGFloat) -> some View {
-        let radius = resolved.insetShadowRadius
-        let offset = radius / 2
-        let walls = [-line / 2, line / 2]
+/// Annulus that fills its rect: outer circle touches the edges, inner circle is `thickness` smaller.
+/// The inner contour runs counter-clockwise so the hole stays empty under the default fill rule.
+struct RingShape: Shape {
+    var thickness: CGFloat
 
-        return ZStack {
-            ForEach(Array(walls.enumerated()), id: \.offset) { _, wall in
-                Circle()
-                    .inset(by: wall)
-                    .stroke(resolved.shadowColor.opacity(0.3), lineWidth: radius)
-                    .blur(radius: radius / 2)
-                    .offset(x: offset, y: offset)
-                Circle()
-                    .inset(by: wall)
-                    .stroke(resolved.highlightColor.opacity(0.8), lineWidth: radius)
-                    .blur(radius: radius / 2)
-                    .offset(x: -offset, y: -offset)
-            }
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let outer = min(rect.width, rect.height) / 2
+        let inner = max(outer - thickness, 0)
+
+        var path = Path()
+        path.addArc(center: center, radius: outer, startAngle: .zero, endAngle: .degrees(360), clockwise: false)
+        if inner > 0 {
+            path.addArc(center: center, radius: inner, startAngle: .zero, endAngle: .degrees(360), clockwise: true)
         }
-        .mask(Circle().stroke(lineWidth: line))
+        return path
     }
 }

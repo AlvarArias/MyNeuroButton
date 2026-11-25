@@ -141,4 +141,32 @@ final class NeumorphicCoreTests: XCTestCase {
         let view = Text("Hi").neumorphicTheme().frame(width: 40, height: 20)
         XCTAssertNotNil(ImageRenderer(content: view).cgImage)
     }
+
+    // MARK: - Inset with custom shape
+
+    private func pixels<V: View>(_ view: V) -> Data? {
+        let renderer = ImageRenderer(content: view.padding(20))
+        renderer.scale = 1
+        return renderer.cgImage?.dataProvider?.data as Data?
+    }
+
+    func testInsetInRoundedRectangleMatchesDefaultInset() throws {
+        let theme = NeumorphicTheme.default
+        let byDefault = try XCTUnwrap(pixels(Color.clear.frame(width: 100, height: 60).neumorphicInset()))
+        let explicit = try XCTUnwrap(pixels(
+            Color.clear.frame(width: 100, height: 60)
+                .neumorphicInset(in: RoundedRectangle(cornerRadius: theme.cornerRadius))))
+        XCTAssertEqual(byDefault, explicit)
+    }
+
+    func testInsetShapeChangesRenderedOutput() throws {
+        let rounded = try XCTUnwrap(pixels(Color.clear.frame(width: 100, height: 40).neumorphicInset()))
+        let capsule = try XCTUnwrap(pixels(Color.clear.frame(width: 100, height: 40).neumorphicInset(in: Capsule())))
+        XCTAssertNotEqual(rounded, capsule)
+    }
+
+    func testInsetStoresShape() {
+        let inset = NeumorphicInset(theme: .default, shape: Capsule())
+        XCTAssertEqual(inset.shadowOffset, NeumorphicTheme.default.insetShadowRadius / 2)
+    }
 }
