@@ -22,8 +22,11 @@ public struct NeuroBadge: View {
     /// Text and icon color. `nil` uses the theme foreground.
     public let tint: Color?
 
-    /// Explicit theme, or `nil` to use the one from the environment
-    public let theme: NeumorphicTheme?
+    private let explicitTheme: NeumorphicTheme?
+
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     // MARK: - Initialization
 
@@ -41,7 +44,7 @@ public struct NeuroBadge: View {
         self.text = text
         self.systemImage = systemImage
         self.tint = tint
-        self.theme = theme
+        self.explicitTheme = theme
     }
 
     /// Badges are small: cap the shadow so it does not swallow the label.
@@ -54,7 +57,7 @@ public struct NeuroBadge: View {
     // MARK: - Body
 
     public var body: some View {
-        let resolved = theme ?? environmentTheme
+        let resolved = explicitTheme ?? environmentTheme
         let relief = Self.smallRelief(of: resolved)
 
         HStack(spacing: 4) {

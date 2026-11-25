@@ -20,8 +20,11 @@ public struct NeuroCard<Content: View>: View {
     /// Padding between the card edge and its content, in points
     public let padding: CGFloat
 
-    /// Explicit theme, or `nil` to use the one from the environment
-    public let theme: NeumorphicTheme?
+    private let explicitTheme: NeumorphicTheme?
+
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     private let content: Content
 
@@ -37,14 +40,14 @@ public struct NeuroCard<Content: View>: View {
         @ViewBuilder content: () -> Content
     ) {
         self.padding = padding
-        self.theme = theme
+        self.explicitTheme = theme
         self.content = content()
     }
 
     // MARK: - Body
 
     public var body: some View {
-        let resolved = theme ?? environmentTheme
+        let resolved = explicitTheme ?? environmentTheme
 
         content
             .padding(padding)

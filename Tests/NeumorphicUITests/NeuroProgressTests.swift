@@ -21,7 +21,7 @@ final class NeuroProgressTests: XCTestCase {
         XCTAssertEqual(progress.style, .bar)
         XCTAssertEqual(progress.tint, .blue)
         XCTAssertEqual(progress.thickness, 16)
-        XCTAssertNil(progress.theme)
+        XCTAssertEqual(progress.theme, .default)
     }
 
     func testStoresCustomValues() {
@@ -31,7 +31,7 @@ final class NeuroProgressTests: XCTestCase {
         XCTAssertEqual(progress.style, .ring)
         XCTAssertEqual(progress.tint, .green)
         XCTAssertEqual(progress.thickness, 10)
-        XCTAssertEqual(progress.theme?.cornerRadius, 3)
+        XCTAssertEqual(progress.theme.cornerRadius, 3)
     }
 
     // MARK: - Fraction

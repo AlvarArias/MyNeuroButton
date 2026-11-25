@@ -34,8 +34,11 @@ public struct NeuroProgress: View {
     /// Thickness of the bar, or of the ring line, in points. Negative values count as 0; a ring never exceeds half its frame.
     public let thickness: CGFloat
 
-    /// Explicit theme, or `nil` to use the one from the environment
-    public let theme: NeumorphicTheme?
+    private let explicitTheme: NeumorphicTheme?
+
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     // MARK: - Initialization
 
@@ -59,7 +62,7 @@ public struct NeuroProgress: View {
         self.style = style
         self.tint = tint
         self.thickness = max(thickness, 0)
-        self.theme = theme
+        self.explicitTheme = theme
     }
 
     /// Completed share, clamped to 0...1. A non-positive `total` counts as empty.
@@ -71,7 +74,7 @@ public struct NeuroProgress: View {
     // MARK: - Body
 
     public var body: some View {
-        let resolved = theme ?? environmentTheme
+        let resolved = explicitTheme ?? environmentTheme
 
         Group {
             switch style {

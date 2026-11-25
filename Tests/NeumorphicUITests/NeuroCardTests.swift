@@ -16,7 +16,7 @@ final class NeuroCardTests: XCTestCase {
     func testDefaults() {
         let card = NeuroCard { Text("Hi") }
         XCTAssertEqual(card.padding, 16)
-        XCTAssertNil(card.theme)
+        XCTAssertEqual(card.theme, .default)
     }
 
     func testStoresCustomValues() {

@@ -39,6 +39,7 @@ Decisión: `EnvironmentValues.neumorphicTheme` (`@Entry`, por defecto `.default`
 Los componentes cambian el parámetro `theme: NeumorphicTheme = .default` por `theme: NeumorphicTheme? = nil` (compatible a nivel de código fuente). Resolución: tema explícito si lo hay; si no, el del Environment. La propiedad pública `theme` sigue siendo `NeumorphicTheme` no opcional (devuelve el explícito o `.default`) para no romper a quien la lea.
 Los modifiers `NeumorphicSurface` y `NeumorphicInset` siguen recibiendo el tema explícito; los componentes les pasan el ya resuelto.
 Regla para componentes nuevos: `theme: NeumorphicTheme? = nil` + `@Environment(\.neumorphicTheme)`.
+Enmienda (T-020): la convención de la propiedad pública es única para todos los componentes: `private let explicitTheme: NeumorphicTheme?` y `public var theme: NeumorphicTheme { explicitTheme ?? .default }` (no opcional). Dentro de `body` se usa `explicitTheme ?? environmentTheme`. La propiedad `theme` no refleja el tema del Environment; su comentario de documentación lo dice.
 
 ### ADR-006 — `NeuroPressable` en Core (aceptada, T-006)
 Contexto: `NeuroToggle` y `MyNeuroButton` repetían `@State isPressed`, lectura del Environment, resolución del tema, `Button` + `.plain` y el gesto de pulsación con su `#if !os(tvOS)`.

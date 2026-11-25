@@ -10,7 +10,7 @@ final class NeuroDividerTests: XCTestCase {
     func testDefaultsToHorizontal() {
         let divider = NeuroDivider()
         XCTAssertEqual(divider.axis, .horizontal)
-        XCTAssertNil(divider.theme)
+        XCTAssertEqual(divider.theme, .default)
     }
 
     func testStoresAxisAndTheme() {

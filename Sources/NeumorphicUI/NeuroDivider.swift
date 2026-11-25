@@ -14,8 +14,11 @@ public struct NeuroDivider: View {
     /// Direction of the line
     public let axis: Axis
 
-    /// Explicit theme, or `nil` to use the one from the environment
-    public let theme: NeumorphicTheme?
+    private let explicitTheme: NeumorphicTheme?
+
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     // MARK: - Initialization
 
@@ -24,13 +27,13 @@ public struct NeuroDivider: View {
     ///   - theme: Explicit theme; `nil` uses the environment theme.
     public init(_ axis: Axis = .horizontal, theme: NeumorphicTheme? = nil) {
         self.axis = axis
-        self.theme = theme
+        self.explicitTheme = theme
     }
 
     // MARK: - Body
 
     public var body: some View {
-        let resolved = theme ?? environmentTheme
+        let resolved = explicitTheme ?? environmentTheme
         let dark = resolved.shadowColor.opacity(0.25)
         let light = resolved.highlightColor.opacity(0.8)
 

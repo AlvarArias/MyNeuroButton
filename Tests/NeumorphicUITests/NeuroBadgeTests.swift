@@ -18,14 +18,14 @@ final class NeuroBadgeTests: XCTestCase {
         XCTAssertEqual(badge.text, "New")
         XCTAssertNil(badge.systemImage)
         XCTAssertNil(badge.tint)
-        XCTAssertNil(badge.theme)
+        XCTAssertEqual(badge.theme, .default)
     }
 
     func testStoresCustomValues() {
         let badge = NeuroBadge("Hot", systemImage: "flame", tint: .red, theme: NeumorphicTheme(cornerRadius: 3))
         XCTAssertEqual(badge.systemImage, "flame")
         XCTAssertEqual(badge.tint, .red)
-        XCTAssertEqual(badge.theme?.cornerRadius, 3)
+        XCTAssertEqual(badge.theme.cornerRadius, 3)
     }
 
     func testRenders() {
