@@ -10,7 +10,10 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] F0-5 CI iOS/tvOS (ya resuelto upstream en `e1625ca`)
 
 ## Fases de producto
-- [ ] T-001 Revisar APIs de iOS 26 usadas
+- [x] T-001 Revisar APIs de iOS 26 usadas (`feat/T-001-platform-api-audit`)
+  - Resultado: ninguna API exclusiva de 26. Se usa `Button`, `onLongPressGesture`, `foregroundStyle`, `scaleEffect`, `shadow`, `Color(red:)`.
+  - Verificado compilando `MyNeuroUI-Package` para iOS Simulator, tvOS Simulator y macOS con mínimos iOS 15/macOS 12/tvOS 15, 16/13/16 y 17/14/17: los tres compilan.
+  - Para T-004: `@Entry` requiere Xcode 16+ pero hace back-deploy.
 - [ ] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004
 - [ ] T-003 `NeumorphicInset` en Core + tests + ADR-002
 - [ ] T-004 Tema por `Environment` + ADR-003
