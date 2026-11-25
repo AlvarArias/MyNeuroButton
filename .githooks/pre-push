@@ -1,0 +1,9 @@
+#!/bin/sh
+# Enable with: git config core.hooksPath .githooks
+set -e
+echo "swift format lint (warnings only)…"
+swift format lint -r Sources Tests || true
+echo "swift build…"
+swift build
+echo "swift test…"
+swift test
