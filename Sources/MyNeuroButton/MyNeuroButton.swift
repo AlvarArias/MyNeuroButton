@@ -7,8 +7,6 @@ public struct MyNeuroButton: View {
 
     // MARK: - Private Properties
 
-    @State private var isPressed = false
-    @Environment(\.neumorphicTheme) private var environmentTheme
     private let explicitTheme: NeumorphicTheme?
 
     // MARK: - Public Properties
@@ -30,9 +28,6 @@ public struct MyNeuroButton: View {
 
     /// Design tokens used when no environment theme applies. Explicit theme passed at init, else `.default`.
     public var theme: NeumorphicTheme { explicitTheme ?? .default }
-
-    /// Explicit theme if given, otherwise the one from the SwiftUI environment.
-    var resolvedTheme: NeumorphicTheme { explicitTheme ?? environmentTheme }
 
     /// Action executed on tap
     public let action: @MainActor () -> Void
@@ -79,27 +74,17 @@ public struct MyNeuroButton: View {
     // MARK: - Body
 
     public var body: some View {
-        Button(action: action) {
+        NeuroPressable(theme: explicitTheme, action: action) { isPressed, theme in
             ZStack {
-                RoundedRectangle(cornerRadius: resolvedTheme.cornerRadius)
-                    .fill(isPressed ? fillColor : resolvedTheme.background)
+                RoundedRectangle(cornerRadius: theme.cornerRadius)
+                    .fill(isPressed ? fillColor : theme.background)
 
                 Image(systemName: isPressed ? iconFilled : icon)
-                    .foregroundStyle(isPressed ? .white : resolvedTheme.foreground)
+                    .foregroundStyle(isPressed ? .white : theme.foreground)
                     .font(.title2)
             }
             .frame(width: width, height: height)
-            .neumorphicSurface(theme: resolvedTheme, isPressed: isPressed)
+            .neumorphicSurface(theme: theme, isPressed: isPressed)
         }
-        .buttonStyle(.plain)
-        #if !os(tvOS)
-        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
-        // engine provides feedback there and `action` fires on select.
-        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            withAnimation(.easeInOut(duration: resolvedTheme.animationDuration)) {
-                isPressed = pressing
-            }
-        }, perform: {})
-        #endif
     }
 }

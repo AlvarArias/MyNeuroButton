@@ -60,11 +60,10 @@ final class NeuroToggleTests: XCTestCase {
         XCTAssertTrue(state)
     }
 
-    func testExplicitThemeWinsOverDefault() {
+    func testExplicitThemeIsStored() {
         let custom = NeumorphicTheme(cornerRadius: 22)
         let toggle = NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false), theme: custom)
         XCTAssertEqual(toggle.theme, custom)
-        XCTAssertEqual(toggle.resolvedTheme, custom)
     }
 
     func testToggleWithoutThemeReportsDefault() {

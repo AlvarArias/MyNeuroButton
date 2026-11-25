@@ -18,10 +18,10 @@ Reglas:
 - `NeumorphicSurface`: superficie elevada/presionada (escala + par de sombras).
 - `NeumorphicInset`: superficie hundida (sombra interior). Para TextField, Slider y Progress.
 - Tema por `Environment` (ADR-003), presets `.default` y `.dark` (ADR-005).
-- Previsto: `NeuroPressable` interno.
+- `NeuroPressable` (ADR-006): botón con seguimiento de pulsación y resolución de tema, base de los componentes pulsables.
 
 ## Patrón de componente
-`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), estado de presión con `onLongPressGesture(minimumDuration: 0)` (no `ButtonStyle`), estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
+`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), los componentes pulsables se construyen sobre `NeuroPressable` (que encapsula `Button` + `onLongPressGesture(minimumDuration: 0)`, no `ButtonStyle`, y la resolución de tema); estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
 
 ## ADRs
 ### ADR-001 — Core separado de UI
@@ -38,6 +38,12 @@ Decisión: `EnvironmentValues.neumorphicTheme` (`@Entry`, por defecto `.default`
 Los componentes cambian el parámetro `theme: NeumorphicTheme = .default` por `theme: NeumorphicTheme? = nil` (compatible a nivel de código fuente). Resolución: tema explícito si lo hay; si no, el del Environment. La propiedad pública `theme` sigue siendo `NeumorphicTheme` no opcional (devuelve el explícito o `.default`) para no romper a quien la lea.
 Los modifiers `NeumorphicSurface` y `NeumorphicInset` siguen recibiendo el tema explícito; los componentes les pasan el ya resuelto.
 Regla para componentes nuevos: `theme: NeumorphicTheme? = nil` + `@Environment(\.neumorphicTheme)`.
+
+### ADR-006 — `NeuroPressable` en Core (aceptada, T-006)
+Contexto: `NeuroToggle` y `MyNeuroButton` repetían `@State isPressed`, lectura del Environment, resolución del tema, `Button` + `.plain` y el gesto de pulsación con su `#if !os(tvOS)`.
+Decisión: `NeuroPressable<Content>` en `NeumorphicCore`. Recibe `theme: NeumorphicTheme?`, `action` y un `label: (isPressed, theme) -> Content`; el componente decide cómo dibuja cada estado. Vive en Core (no en UI) porque `MyNeuroButton` solo puede depender de Core.
+`resolvedTheme` desaparece de los componentes; la regla de resolución queda en `NeuroPressable.resolve(explicit:environment:)` (interna, con tests).
+No cambia la API pública de los componentes ni su aspecto. Los componentes nuevos pulsables (Stepper, SegmentedControl, TabBar) usan `NeuroPressable`.
 
 ### ADR-005 — Modo oscuro por preset y modificador adaptativo (aceptada, T-005)
 Decisión: no hacer los colores del tema "dinámicos". Se añaden dos tokens, `shadowColor` (por defecto `.black`) y `highlightColor` (por defecto `.white`), que `NeumorphicSurface` y `NeumorphicInset` usan en lugar de negro/blanco fijos. Se añade el preset `NeumorphicTheme.dark` (fondo oscuro, luz tenue) y el modificador `View.neumorphicTheme(light:dark:)`, que elige el tema según `colorScheme` e inyecta el resultado en el Environment (ADR-003).
