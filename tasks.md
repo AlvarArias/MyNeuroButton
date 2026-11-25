@@ -1,0 +1,31 @@
+# tasks.md
+
+Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [x] hecho.
+
+## Fase 0 — Estructura de agente
+- [x] F0-1 SPEC, ARCHITECTURE, tasks, AGENTS (`chore/F0-1-project-docs`)
+- [ ] F0-2 Ampliar CLAUDE.md (workflow y reglas duras)
+- [ ] F0-3 `.claude/agents/` y `docs/reviews/`
+- [ ] F0-4 Linter/formatter y `.githooks`
+- [ ] F0-5 CI: build iOS y tvOS
+
+## Fases de producto
+- [ ] T-001 Revisar APIs de iOS 26 usadas
+- [ ] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004
+- [ ] T-003 `NeumorphicInset` en Core + tests + ADR-002
+- [ ] T-004 Tema por `Environment` + ADR-003
+- [ ] T-005 Modo oscuro en `NeumorphicTheme`
+- [ ] T-006 Extraer `NeuroPressable`
+- [ ] T-007 `NeuroCard`
+- [ ] T-008 `NeuroBadge` / `NeuroDivider`
+- [ ] T-009 `NeuroProgress`
+- [ ] T-010 `NeuroSlider`
+- [ ] T-011 `NeuroSegmentedControl`
+- [ ] T-012 `NeuroTextField`
+- [ ] T-013 `NeuroStepper` / `NeuroTabBar`
+- [ ] T-014 Accesibilidad transversal
+- [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
+- [ ] T-016 README con galería + release
+
+## Hallazgos fuera de alcance
+(añadir aquí líneas en vez de arreglarlas en otra tarea)
