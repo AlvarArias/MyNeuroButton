@@ -23,7 +23,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-008 `NeuroBadge` / `NeuroDivider` (`feat/T-008-badge-divider`)
 - [x] T-009 `NeuroProgress` (`feat/T-009-neuro-progress`)
 - [x] T-010 `NeuroSlider` (`feat/T-010-neuro-slider` + `fix/review-T-010`; arrastre solo verificado por lógica pura, no con dedo real; tvOS solo compila)
-- [ ] T-011 `NeuroSegmentedControl`
+- [x] T-011 `NeuroSegmentedControl` (`feat/T-011-segmented-control`; toque y animación de la píldora solo verificados por lógica y render, sin revisión independiente todavía)
 - [ ] T-012 `NeuroTextField`
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
 - [ ] T-014 Accesibilidad transversal
