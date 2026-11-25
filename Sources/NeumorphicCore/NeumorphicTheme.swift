@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Design tokens that control the visual appearance of all neumorphic components.
-public struct NeumorphicTheme: Sendable {
+public struct NeumorphicTheme: Sendable, Equatable {
 
     public var background: Color
     public var foreground: Color

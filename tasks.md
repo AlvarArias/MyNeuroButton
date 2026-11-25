@@ -16,7 +16,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Para T-004: `@Entry` requiere Xcode 16+ pero hace back-deploy.
 - [x] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004 (`feat/T-002-platform-minimum`): iOS 17 / macOS 14 / tvOS 17, visionOS no por ahora
 - [x] T-003 `NeumorphicInset` en Core + tests + ADR-002 (`feat/T-003-neumorphic-inset`)
-- [ ] T-004 Tema por `Environment` + ADR-003
+- [x] T-004 Tema por `Environment` + ADR-003 (`feat/T-004-theme-environment`)
 - [ ] T-005 Modo oscuro en `NeumorphicTheme`
 - [ ] T-006 Extraer `NeuroPressable`
 - [ ] T-007 `NeuroCard`

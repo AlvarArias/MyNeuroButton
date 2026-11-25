@@ -83,4 +83,26 @@ final class NeumorphicCoreTests: XCTestCase {
         let renderer = ImageRenderer(content: view)
         XCTAssertNotNil(renderer.cgImage)
     }
+
+    // MARK: - Environment
+
+    func testEnvironmentThemeDefaultsToDefaultTheme() {
+        XCTAssertEqual(EnvironmentValues().neumorphicTheme, NeumorphicTheme.default)
+    }
+
+    func testEnvironmentThemeCanBeSet() {
+        var values = EnvironmentValues()
+        values.neumorphicTheme = NeumorphicTheme(cornerRadius: 30)
+        XCTAssertEqual(values.neumorphicTheme.cornerRadius, 30)
+    }
+
+    func testThemeEquatable() {
+        XCTAssertEqual(NeumorphicTheme(cornerRadius: 4), NeumorphicTheme(cornerRadius: 4))
+        XCTAssertNotEqual(NeumorphicTheme(cornerRadius: 4), NeumorphicTheme(cornerRadius: 5))
+    }
+
+    func testNeumorphicThemeViewModifierRenders() {
+        let view = Text("Hi").neumorphicTheme(NeumorphicTheme(cornerRadius: 3)).frame(width: 40, height: 20)
+        XCTAssertNotNil(ImageRenderer(content: view).cgImage)
+    }
 }

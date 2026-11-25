@@ -20,7 +20,7 @@ Reglas:
 - Previsto: tema por `Environment`, `NeuroPressable` interno.
 
 ## Patrón de componente
-`@MainActor struct Neuro<Nombre>: View`, parámetro `theme`, estado de presión con `onLongPressGesture(minimumDuration: 0)` (no `ButtonStyle`), estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
+`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), estado de presión con `onLongPressGesture(minimumDuration: 0)` (no `ButtonStyle`), estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
 
 ## ADRs
 ### ADR-001 — Core separado de UI
@@ -31,8 +31,12 @@ Los componentes "hundidos" (TextField, Slider, Progress) necesitan un modifier i
 Decisión: `NeumorphicInset` (ViewModifier) + `View.neumorphicInset(theme:)`. Pinta como fondo del contenido un `RoundedRectangle(theme.cornerRadius)` relleno con `theme.background`, con dos trazos desenfocados y recortados a la forma: oscuro desplazado hacia dentro desde arriba-izquierda, claro desde abajo-derecha. Es el espejo de `NeumorphicSurface`.
 Nuevo token `NeumorphicTheme.insetShadowRadius` (por defecto 5), añadido al final del `init` con valor por defecto, sin romper llamadas existentes. El desplazamiento es `insetShadowRadius / 2`.
 
-### ADR-003 — Tema por Environment (pendiente, T-004)
+### ADR-003 — Tema por Environment (aceptada, T-004)
 Evita pasar `theme:` a cada componente en una app; `theme:` explícito queda como override.
+Decisión: `EnvironmentValues.neumorphicTheme` (`@Entry`, por defecto `.default`) y `View.neumorphicTheme(_:)` para inyectarlo en un subárbol. `NeumorphicTheme` pasa a ser `Equatable`.
+Los componentes cambian el parámetro `theme: NeumorphicTheme = .default` por `theme: NeumorphicTheme? = nil` (compatible a nivel de código fuente). Resolución: tema explícito si lo hay; si no, el del Environment. La propiedad pública `theme` sigue siendo `NeumorphicTheme` no opcional (devuelve el explícito o `.default`) para no romper a quien la lea.
+Los modifiers `NeumorphicSurface` y `NeumorphicInset` siguen recibiendo el tema explícito; los componentes les pasan el ya resuelto.
+Regla para componentes nuevos: `theme: NeumorphicTheme? = nil` + `@Environment(\.neumorphicTheme)`.
 
 ### ADR-004 — Mínimo de plataforma: iOS 17 / macOS 14 / tvOS 17 (aceptada, T-002)
 Contexto: el mínimo era 26 sin que ninguna API lo exigiera (T-001: compila hasta iOS 15/macOS 12/tvOS 15).

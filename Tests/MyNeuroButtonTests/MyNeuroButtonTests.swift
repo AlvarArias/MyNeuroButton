@@ -78,4 +78,20 @@ final class MyNeuroButtonTests: XCTestCase {
         XCTAssertEqual(button.width, 120)
         XCTAssertEqual(button.height, 80)
     }
+
+    func testExplicitThemeWinsOverEnvironmentFallback() {
+        let custom = NeumorphicTheme(cornerRadius: 22)
+        let button = MyNeuroButton(icon: "star", iconFilled: "star.fill", theme: custom) {}
+        XCTAssertEqual(button.resolvedTheme, custom)
+    }
+
+    func testButtonWithoutThemeReportsDefault() {
+        let button = MyNeuroButton(icon: "star", iconFilled: "star.fill") {}
+        XCTAssertEqual(button.theme, .default)
+    }
+
+    func testDeprecatedInitStillBuilds() {
+        let button = MyNeuroButton(icon: "star", iconFull: "star.fill") {}
+        XCTAssertEqual(button.iconFilled, "star.fill")
+    }
 }
