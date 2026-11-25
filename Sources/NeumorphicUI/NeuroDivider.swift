@@ -19,6 +19,9 @@ public struct NeuroDivider: View {
 
     // MARK: - Initialization
 
+    /// - Parameters:
+    ///   - axis: `.horizontal` (default) or `.vertical`.
+    ///   - theme: Explicit theme; `nil` uses the environment theme.
     public init(_ axis: Axis = .horizontal, theme: NeumorphicTheme? = nil) {
         self.axis = axis
         self.theme = theme

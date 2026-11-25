@@ -5,6 +5,9 @@ import SwiftUI
 ///
 /// The relief is drawn on a background shape, not on the content, so text and icons
 /// inside the card never pick up a shadow halo.
+///
+/// The shadow extends past the card bounds (about `normalShadowRadius` points). Leave that much
+/// space around the card, or `ScrollView`, `List` and `.clipped()` will cut it.
 @MainActor
 public struct NeuroCard<Content: View>: View {
 
@@ -24,6 +27,10 @@ public struct NeuroCard<Content: View>: View {
 
     // MARK: - Initialization
 
+    /// - Parameters:
+    ///   - padding: Space between the card edge and its content, in points.
+    ///   - theme: Explicit theme; `nil` uses the environment theme.
+    ///   - content: The content shown inside the card.
     public init(
         padding: CGFloat = 16,
         theme: NeumorphicTheme? = nil,

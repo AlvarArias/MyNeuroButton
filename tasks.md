@@ -30,10 +30,20 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
 - [ ] T-016 README con galería + release
 - [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
-- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 y 2 (incluye `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona)
+- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 a 3 (incluye `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress` y `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona)
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
 - README dice Xcode 16+ pero `swift-tools-version: 6.2` exige Xcode 26; corregir el README o bajar tools-version (hallado en T-002).
 - CLAUDE.md "Public API" sigue describiendo el tema antiguo: sincronizar con `NeumorphicInset`, `neumorphicTheme` (Environment), `.dark` y los tokens nuevos (T-018, hallado al cerrar la Fase 1).
 - `NeuroProgress` usa textos de accesibilidad fijos en inglés ("Progress", "N percent"): localizarlos y permitir `accessibilityLabel` propio (hallado en T-009; encaja con T-014).
+
+## Hallazgos de la revisión independiente de T-007 a T-009 (pendientes de decisión)
+Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor < 4, 0 o negativo; anillo más grueso que su marco), icono del badge oculto a VoiceOver, documentación `///` de los inits públicos y aviso de recorte de sombras.
+- [ ] T-019 **Decidir** API de Core para el anillo: hoy `NeuroProgress.grooveShadows` dibuja sombras interiores a mano (duplica opacidades y offset de `NeumorphicInset`, contra ADR-002). Opciones: `neumorphicInset(theme:shape:)` genérico en Core, o un ADR que justifique la excepción.
+- [ ] T-020 **Decidir** convención de la propiedad `theme`: `NeuroToggle`/`MyNeuroButton` exponen `NeumorphicTheme` no opcional (ADR-003); los 4 componentes nuevos exponen `NeumorphicTheme?`. Unificar y registrarlo en ADR-003.
+- [ ] T-021 **Decidir** si se hace público un único helper de resolución de tema en Core (hoy `theme ?? environmentTheme` se repite en 4 componentes; `NeuroPressable.resolve` es interno).
+- [ ] T-022 Constantes mágicas: tope de sombra del badge (4), opacidades 0.25/0.8 del divider y 0.3/0.8 de las sombras. Pasarlas a tokens o a una única fuente en Core. Valorar `cornerRadius:` explícito en `neumorphicInset` en vez de copiar el tema (ligado a T-019).
+- [ ] T-023 `reduceMotion`: `NeuroProgress` y `NeuroToggle` animan siempre; leer `accessibilityReduceMotion` (encaja con T-014).
+- [ ] T-024 Test helper `pixels` repetido en 5 archivos de test: moverlo a un `TestSupport.swift` por target.
+- [ ] T-025 Docs: añadir los 4 componentes nuevos al árbol y a "Public API" de CLAUDE.md, y un ADR para la técnica del anillo y el patrón de copiar el tema (incluido en T-018).

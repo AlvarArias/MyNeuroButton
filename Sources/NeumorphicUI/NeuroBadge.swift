@@ -2,6 +2,8 @@ import NeumorphicCore
 import SwiftUI
 
 /// Small raised capsule with a label and an optional SF Symbol.
+///
+/// The shadow extends a few points past the badge; leave room around it inside clipped containers.
 @MainActor
 public struct NeuroBadge: View {
 
@@ -25,6 +27,11 @@ public struct NeuroBadge: View {
 
     // MARK: - Initialization
 
+    /// - Parameters:
+    ///   - text: Badge label.
+    ///   - systemImage: Optional SF Symbol shown before the text. Hidden from VoiceOver.
+    ///   - tint: Text and icon color; `nil` uses the theme foreground.
+    ///   - theme: Explicit theme; `nil` uses the environment theme.
     public init(
         _ text: String,
         systemImage: String? = nil,
@@ -53,6 +60,7 @@ public struct NeuroBadge: View {
         HStack(spacing: 4) {
             if let systemImage {
                 Image(systemName: systemImage)
+                    .accessibilityHidden(true)
             }
             Text(text)
         }

@@ -7,7 +7,9 @@ public struct NeuroProgress: View {
 
     /// Visual form of the indicator
     public enum Style: Sendable, Equatable {
+        /// Horizontal sunken track that fills from the leading edge.
         case bar
+        /// Circular groove that fills clockwise from the top.
         case ring
     }
 
@@ -29,7 +31,7 @@ public struct NeuroProgress: View {
     /// Color of the filled part
     public let tint: Color
 
-    /// Thickness of the bar, or of the ring line, in points
+    /// Thickness of the bar, or of the ring line, in points. Negative values count as 0; a ring never exceeds half its frame.
     public let thickness: CGFloat
 
     /// Explicit theme, or `nil` to use the one from the environment
@@ -37,6 +39,13 @@ public struct NeuroProgress: View {
 
     // MARK: - Initialization
 
+    /// - Parameters:
+    ///   - value: Current value, from 0 to `total`. Out-of-range values are clamped.
+    ///   - total: Value at which the indicator is full. Defaults to 1.
+    ///   - style: `.bar` or `.ring`.
+    ///   - tint: Color of the filled part.
+    ///   - thickness: Bar height or ring line width, in points.
+    ///   - theme: Explicit theme; `nil` uses the environment theme.
     public init(
         value: Double,
         total: Double = 1,
@@ -49,7 +58,7 @@ public struct NeuroProgress: View {
         self.total = total
         self.style = style
         self.tint = tint
-        self.thickness = thickness
+        self.thickness = max(thickness, 0)
         self.theme = theme
     }
 
@@ -85,17 +94,18 @@ public struct NeuroProgress: View {
         capsule.cornerRadius = thickness / 2
 
         let inset: CGFloat = 2
+        let fillHeight = max(thickness - inset * 2, 0)
 
         return GeometryReader { proxy in
             let innerWidth = max(proxy.size.width - inset * 2, 0)
-            let fillWidth = fraction > 0 ? max(innerWidth * fraction, thickness - inset * 2) : 0
+            let fillWidth = fraction > 0 ? max(innerWidth * fraction, fillHeight) : 0
 
             ZStack(alignment: .leading) {
                 Color.clear.neumorphicInset(theme: capsule)
 
                 Capsule()
                     .fill(tint)
-                    .frame(width: fillWidth, height: thickness - inset * 2)
+                    .frame(width: fillWidth, height: fillHeight)
                     .padding(inset)
             }
         }
@@ -103,32 +113,35 @@ public struct NeuroProgress: View {
     }
 
     private func ring(_ resolved: NeumorphicTheme) -> some View {
-        let line = StrokeStyle(lineWidth: thickness, lineCap: .round)
+        GeometryReader { proxy in
+            // The line can never be thicker than the radius, or the ring would collapse.
+            let line = min(thickness, min(proxy.size.width, proxy.size.height) / 2)
 
-        return ZStack {
-            Circle()
-                .stroke(resolved.background, lineWidth: thickness)
-                .overlay { grooveShadows(resolved) }
+            ZStack {
+                Circle()
+                    .stroke(resolved.background, lineWidth: line)
+                    .overlay { grooveShadows(resolved, thickness: line) }
 
-            Circle()
-                .trim(from: 0, to: fraction)
-                .stroke(tint, style: line)
-                .rotationEffect(.degrees(-90))
-                .opacity(fraction > 0 ? 1 : 0)
+                Circle()
+                    .trim(from: 0, to: fraction)
+                    .stroke(tint, style: StrokeStyle(lineWidth: line, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .opacity(fraction > 0 ? 1 : 0)
+            }
+            .padding(line / 2)
         }
-        .padding(thickness / 2)
         .aspectRatio(1, contentMode: .fit)
     }
 
     /// Inner shadows of the ring track. They hug both walls of the groove (outer and inner edge)
     /// and are masked to the track so nothing spills outside it.
-    private func grooveShadows(_ resolved: NeumorphicTheme) -> some View {
+    private func grooveShadows(_ resolved: NeumorphicTheme, thickness line: CGFloat) -> some View {
         let radius = resolved.insetShadowRadius
         let offset = radius / 2
-        let walls = [-thickness / 2, thickness / 2]
+        let walls = [-line / 2, line / 2]
 
         return ZStack {
-            ForEach(walls, id: \.self) { wall in
+            ForEach(Array(walls.enumerated()), id: \.offset) { _, wall in
                 Circle()
                     .inset(by: wall)
                     .stroke(resolved.shadowColor.opacity(0.3), lineWidth: radius)
@@ -141,6 +154,6 @@ public struct NeuroProgress: View {
                     .offset(x: -offset, y: -offset)
             }
         }
-        .mask(Circle().stroke(lineWidth: thickness))
+        .mask(Circle().stroke(lineWidth: line))
     }
 }

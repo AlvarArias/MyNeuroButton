@@ -93,4 +93,31 @@ final class NeuroProgressTests: XCTestCase {
         XCTAssertNotEqual(plain, viaEnvironment)
         XCTAssertEqual(viaEnvironment, explicit)
     }
+
+    // MARK: - Edge cases from the independent review
+
+    func testNegativeThicknessIsClampedToZero() {
+        XCTAssertEqual(NeuroProgress(value: 0.5, thickness: -4).thickness, 0)
+    }
+
+    func testTinyThicknessBarRendersWithoutNegativeFrames() {
+        for thickness in [CGFloat(1), 2, 3] {
+            let view = NeuroProgress(value: 0.5, thickness: thickness).frame(width: 100)
+            let image = ImageRenderer(content: view).cgImage
+            XCTAssertNotNil(image, "thickness \(thickness)")
+            XCTAssertEqual(image?.height, Int(thickness), "thickness \(thickness)")
+        }
+    }
+
+    func testZeroThicknessRingRenders() {
+        let view = NeuroProgress(value: 0.5, style: .ring, thickness: 0).frame(width: 60, height: 60)
+        XCTAssertNotNil(ImageRenderer(content: view).cgImage)
+    }
+
+    func testOversizedRingThicknessStaysInsideItsFrame() throws {
+        let view = NeuroProgress(value: 0.5, style: .ring, thickness: 80).frame(width: 50, height: 50)
+        let image = try XCTUnwrap(ImageRenderer(content: view).cgImage)
+        XCTAssertEqual(image.width, 50)
+        XCTAssertEqual(image.height, 50)
+    }
 }
