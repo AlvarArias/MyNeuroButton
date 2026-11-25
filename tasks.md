@@ -6,8 +6,8 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] F0-1 SPEC, ARCHITECTURE, tasks, AGENTS (`chore/F0-1-project-docs`)
 - [ ] F0-2 Ampliar CLAUDE.md (workflow y reglas duras)
 - [ ] F0-3 `.claude/agents/` y `docs/reviews/`
-- [ ] F0-4 Linter/formatter y `.githooks`
-- [ ] F0-5 CI: build iOS y tvOS
+- [x] F0-4 Linter/formatter y `.githooks` (rama `chore/F0-4-lint-hooks`; el lint solo avisa: quedan diffs de formato en NeuroToggle, MyNeuroButton y NeumorphicSurface)
+- [x] F0-5 CI iOS/tvOS (ya resuelto upstream en `e1625ca`)
 
 ## Fases de producto
 - [ ] T-001 Revisar APIs de iOS 26 usadas
