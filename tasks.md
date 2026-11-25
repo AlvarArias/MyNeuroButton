@@ -26,6 +26,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [ ] T-014 Accesibilidad transversal
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
 - [ ] T-016 README con galería + release
+- [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
