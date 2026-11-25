@@ -20,7 +20,8 @@ public struct NeuroSegment<Value: Hashable>: Identifiable {
 
     /// - Parameters:
     ///   - title: Visible text and VoiceOver label.
-    ///   - value: Selection value this segment stands for. Values in one control must be unique.
+    ///   - value: Selection value this segment stands for. Keep values unique inside one control;
+    ///     if two segments share a value, only the first one is highlighted.
     ///   - systemImage: Optional SF Symbol shown before the title.
     ///   - showsTitle: Pass `false` for an icon-only segment (needs `systemImage`).
     public init(_ title: String, value: Value, systemImage: String? = nil, showsTitle: Bool = true) {
@@ -32,12 +33,18 @@ public struct NeuroSegment<Value: Hashable>: Identifiable {
 }
 
 /// Sunken track with one raised pill that slides to the selected segment.
+///
+/// Tapping anywhere on a segment selects it. If `selection` matches no segment, nothing is
+/// highlighted; if it matches several, only the first is. The pill's shadow extends a few points
+/// past the track, so leave some room around the control inside clipped containers. The slide is
+/// skipped when the system's Reduce Motion setting is on.
 @MainActor
 public struct NeuroSegmentedControl<Value: Hashable>: View {
 
     // MARK: - Private Properties
 
     @Environment(\.neumorphicTheme) private var environmentTheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Namespace private var pillNamespace
     private let explicitTheme: NeumorphicTheme?
 
@@ -46,7 +53,7 @@ public struct NeuroSegmentedControl<Value: Hashable>: View {
     /// The selected value
     @Binding public var selection: Value
 
-    /// The options, in display order. Values must be unique.
+    /// The options, in display order. Values should be unique.
     public let segments: [NeuroSegment<Value>]
 
     /// Color of the selected segment's content
@@ -83,9 +90,9 @@ public struct NeuroSegmentedControl<Value: Hashable>: View {
 
     // MARK: - Logic
 
-    /// Whether `segment` is the one currently selected.
-    func isSelected(_ segment: NeuroSegment<Value>) -> Bool {
-        segment.value == selection
+    /// Index of the highlighted segment: the first one whose value equals `selection`, or `nil`.
+    var selectedIndex: Int? {
+        segments.firstIndex { $0.value == selection }
     }
 
     /// Makes `segment` the selection.
@@ -106,22 +113,21 @@ public struct NeuroSegmentedControl<Value: Hashable>: View {
         let resolved = explicitTheme ?? environmentTheme
 
         HStack(spacing: Self.trackPadding) {
-            ForEach(segments) { segment in
-                segmentView(segment)
+            // Identified by position, not by value, so duplicate values cannot break the layout.
+            ForEach(Array(segments.enumerated()), id: \.offset) { index, segment in
+                segmentView(segment, isSelected: index == selectedIndex)
             }
         }
         .padding(Self.trackPadding)
         .neumorphicInset(theme: resolved)
-        .animation(.easeInOut(duration: resolved.animationDuration), value: selection)
+        .animation(reduceMotion ? nil : .easeInOut(duration: resolved.animationDuration), value: selection)
         .accessibilityElement(children: .contain)
     }
 
     // MARK: - Private Views
 
-    private func segmentView(_ segment: NeuroSegment<Value>) -> some View {
-        let selected = isSelected(segment)
-
-        return NeuroPressable(theme: explicitTheme, action: { select(segment) }) { isPressed, theme in
+    private func segmentView(_ segment: NeuroSegment<Value>, isSelected selected: Bool) -> some View {
+        NeuroPressable(theme: explicitTheme, action: { select(segment) }) { isPressed, theme in
             HStack(spacing: 6) {
                 if let systemImage = segment.systemImage {
                     Image(systemName: systemImage)
@@ -135,6 +141,8 @@ public struct NeuroSegmentedControl<Value: Hashable>: View {
             .lineLimit(1)
             .frame(maxWidth: .infinity, minHeight: segmentHeight)
             .opacity(isPressed && !selected ? 0.6 : 1)
+            // Make the whole segment tappable, not just the text, even when it has no pill behind it.
+            .contentShape(Rectangle())
             .background {
                 if selected {
                     RoundedRectangle(
@@ -157,17 +165,20 @@ extension NeuroSegmentedControl where Value == Int {
     ///   - selection: Binding to the selected index.
     ///   - titles: One title per segment, in display order.
     ///   - tint: Color of the selected segment's content.
+    ///   - segmentHeight: Minimum height of each segment, in points.
     ///   - theme: Explicit theme; `nil` uses the environment theme.
     public init(
         selection: Binding<Int>,
         titles: [String],
         tint: Color = .blue,
+        segmentHeight: CGFloat = 36,
         theme: NeumorphicTheme? = nil
     ) {
         self.init(
             selection: selection,
             segments: titles.enumerated().map { NeuroSegment($0.element, value: $0.offset) },
             tint: tint,
+            segmentHeight: segmentHeight,
             theme: theme)
     }
 }

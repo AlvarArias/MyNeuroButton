@@ -70,11 +70,9 @@ final class NeuroSegmentedControlTests: XCTestCase {
 
     // MARK: - Selection logic
 
-    func testIsSelectedFollowsTheBinding() {
-        let control = NeuroSegmentedControl(selection: .constant(1), titles: titles)
-        XCTAssertFalse(control.isSelected(control.segments[0]))
-        XCTAssertTrue(control.isSelected(control.segments[1]))
-        XCTAssertFalse(control.isSelected(control.segments[2]))
+    func testSelectedIndexFollowsTheBinding() {
+        XCTAssertEqual(NeuroSegmentedControl(selection: .constant(0), titles: titles).selectedIndex, 0)
+        XCTAssertEqual(NeuroSegmentedControl(selection: .constant(2), titles: titles).selectedIndex, 2)
     }
 
     func testSelectWritesTheSegmentValueToTheBinding() {
@@ -94,8 +92,7 @@ final class NeuroSegmentedControlTests: XCTestCase {
     }
 
     func testSelectionNotInSegmentsSelectsNothing() {
-        let control = NeuroSegmentedControl(selection: .constant(99), titles: titles)
-        XCTAssertFalse(control.segments.contains { control.isSelected($0) })
+        XCTAssertNil(NeuroSegmentedControl(selection: .constant(99), titles: titles).selectedIndex)
     }
 
     func testWorksWithNonIntegerSelection() {
@@ -180,5 +177,42 @@ final class NeuroSegmentedControlTests: XCTestCase {
         let without = try XCTUnwrap(
             pixels(NeuroSegmentedControl(selection: .constant(1), titles: titles, theme: explicit).frame(width: 300)))
         XCTAssertEqual(withEnvironment, without)
+    }
+
+    // MARK: - Cases from the independent review
+
+    func testDuplicateValuesHighlightOnlyTheFirstMatch() {
+        let control = NeuroSegmentedControl(
+            selection: .constant(1),
+            segments: [NeuroSegment("A", value: 1), NeuroSegment("B", value: 1), NeuroSegment("C", value: 2)])
+        XCTAssertEqual(control.selectedIndex, 0)
+    }
+
+    func testDuplicateValuesStillDrawEverySegment() throws {
+        // With duplicates, selection 1 highlights index 0, exactly like unique values and selection 0.
+        let duplicated = NeuroSegmentedControl(
+            selection: .constant(1),
+            segments: [NeuroSegment("A", value: 1), NeuroSegment("B", value: 1), NeuroSegment("C", value: 2)])
+        let unique = NeuroSegmentedControl(
+            selection: .constant(0),
+            segments: [NeuroSegment("A", value: 0), NeuroSegment("B", value: 1), NeuroSegment("C", value: 2)])
+        let a = try XCTUnwrap(pixels(duplicated.frame(width: 300)))
+        let b = try XCTUnwrap(pixels(unique.frame(width: 300)))
+        XCTAssertEqual(a, b)
+    }
+
+    func testTitlesInitAcceptsSegmentHeight() {
+        let control = NeuroSegmentedControl(selection: .constant(0), titles: titles, segmentHeight: 52)
+        XCTAssertEqual(control.segmentHeight, 52)
+    }
+
+    func testIconOnlySegmentRendersNarrowerThanOneWithTitle() throws {
+        func width(showsTitle: Bool) throws -> Int {
+            let control = NeuroSegmentedControl(
+                selection: .constant(0),
+                segments: [NeuroSegment("Search", value: 0, systemImage: "magnifyingglass", showsTitle: showsTitle)])
+            return try XCTUnwrap(ImageRenderer(content: control.fixedSize()).cgImage).width
+        }
+        XCTAssertLessThan(try width(showsTitle: false), try width(showsTitle: true))
     }
 }

@@ -17,7 +17,7 @@ Reglas:
 - `NeumorphicTheme` (struct `Sendable`): fondo, foreground, radios, duración de animación, radios de sombra.
 - `NeumorphicSurface`: superficie elevada/presionada (escala + par de sombras).
 - `NeumorphicInset<S: Shape>`: superficie hundida (sombra interior) en cualquier forma; `.neumorphicInset(theme:)` usa `RoundedRectangle` y `.neumorphicInset(in:theme:)` acepta otra forma. Para TextField, Slider y Progress.
-- Componentes de `NeumorphicUI`: `NeuroToggle`, `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress`, `NeuroSlider`, `NeuroSegmentedControl` (con `NeuroSegment`; cada segmento es un `NeuroPressable`). Helper interno `NeumorphicTheme.cappingShadow(at:)` (`NeumorphicTheme+Relief.swift`) limita el radio de sombra de elementos pequeños (badge: 4, pomo del slider: 5).
+- Componentes de `NeumorphicUI`: `NeuroToggle`, `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress`, `NeuroSlider`, `NeuroSegmentedControl` (con `NeuroSegment`; cada segmento es un `NeuroPressable`). Helper interno `NeumorphicTheme.cappingShadow(at:)` (`NeumorphicTheme+Relief.swift`) limita el radio de sombra de elementos pequeños (badge: 4, pomo del slider: 5, píldora del segmented: 5).
 - Tema por `Environment` (ADR-003), presets `.default` y `.dark` (ADR-005).
 - `NeuroPressable` (ADR-006): botón con seguimiento de pulsación y resolución de tema, base de los componentes pulsables.
 

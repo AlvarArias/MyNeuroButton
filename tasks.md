@@ -43,8 +43,8 @@ Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor
 - [x] T-019 (`feat/T-019-inset-shape`) `NeumorphicInset` pasó a ser genérico sobre la forma (`.neumorphicInset(in:theme:)`); `NeuroProgress` usa `Capsule` y `RingShape` y ya no dibuja sombras a mano ni copia el tema para cambiar `cornerRadius`. Ver ADR-002.
 - [x] T-020 (`feat/T-020-theme-property`) Todos los componentes comparten la convención de ADR-003: `public var theme: NeumorphicTheme` no opcional (explícito o `.default`). Ver ADR-003.
 - [ ] T-021 **Decidir** si se hace público un único helper de resolución de tema en Core (hoy `theme ?? environmentTheme` se repite en 4 componentes; `NeuroPressable.resolve` es interno).
-- [ ] T-022 Constantes mágicas: topes de sombra de `cappingShadow(at:)` (badge 4, pomo del slider 5), opacidades 0.25/0.8 del divider y 0.3/0.8 de las sombras. Pasarlas a tokens o a una única fuente en Core.
-- [ ] T-023 `reduceMotion`: `NeuroProgress`, `NeuroToggle` y `NeuroSlider` animan siempre; leer `accessibilityReduceMotion` (encaja con T-014).
+- [ ] T-022 Constantes mágicas: topes de sombra de `cappingShadow(at:)` (badge 4, pomo del slider 5, píldora del segmented 5; además espaciado 6, opacidad 0.6 y relleno de pista 4 de `NeuroSegmentedControl`), opacidades 0.25/0.8 del divider y 0.3/0.8 de las sombras. Pasarlas a tokens o a una única fuente en Core.
+- [ ] T-023 `reduceMotion`: `NeuroProgress`, `NeuroToggle` y `NeuroSlider` animan siempre (`NeuroSegmentedControl` ya respeta `reduceMotion`); leer `accessibilityReduceMotion` (encaja con T-014).
 - [ ] T-024 Test helper `pixels` repetido en 5 archivos de test: moverlo a un `TestSupport.swift` por target.
 - [ ] T-025 Docs: añadir los 5 componentes nuevos (incluido `NeuroSlider`) al árbol y a "Public API" de CLAUDE.md, (incluido en T-018); el ADR-002 ya cubre la técnica del anillo y `cappingShadow(at:)` está descrito en "Piezas clave".
 - `NeuroProgress` debería formatear su valor de accesibilidad con `.percent` como hace `NeuroSlider` (localizado) en vez de "N percent" fijo (hallado en T-010; parte de T-014).
@@ -52,7 +52,13 @@ Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor
 ## Hallazgos de la revisión independiente de T-019, T-020 y T-010
 Corregidos en `fix/review-T-010`: el arrastre ignoraba `layoutDirection` (en derecha-a-izquierda el pomo saltaba al lado contrario), ruido de coma flotante en `snapped` (0.30000000000000004 con paso 0.1), el pomo podía quedarse hundido si SwiftUI cancelaba el gesto (ahora `@GestureState`), `step!` sin desempaquetar de forma segura, test vacío del binding eliminado, aviso de scroll/sombras en la documentación y comentario de `theme` unificado en `NeuroToggle` y `MyNeuroButton`.
 - [ ] T-026 tvOS: `NeuroSlider` es `focusable()` pero no muestra foco; añadir indicador visual (p. ej. `@Environment(\.isFocused)` en una vista hija) y probarlo en un Apple TV o simulador.
-- [ ] T-027 `NeuroSlider` sin `accessibilityLabel` por defecto: VoiceOver solo dice "ajustable, 50 %". `NeuroProgress` sí tiene "Progress". Decidir una política común (T-014).
+- [ ] T-027 `NeuroSlider` y `NeuroSegmentedControl` sin `accessibilityLabel` de grupo; el slider sin etiqueta por defecto: VoiceOver solo dice "ajustable, 50 %". `NeuroProgress` sí tiene "Progress". Decidir una política común (T-014).
 - [ ] T-028 Nombres de tamaño inconsistentes: `NeuroSlider` usa `trackHeight`/`knobSize`, `NeuroProgress` usa `thickness` y `NeuroToggle` usa `width`/`height`. Decidir si se unifican.
-- [ ] T-029 `NeuroBadge` recibe `String`, no `LocalizedStringKey`: no se puede localizar por clave.
+- [ ] T-029 `NeuroBadge` y `NeuroSegment` (y `titles:` de `NeuroSegmentedControl`) reciben `String`, no `LocalizedStringKey`: no se pueden localizar por clave.
 - [ ] T-030 Tests que faltan: ruta arrastre → binding (no testeable sin un gesto real; valorar una prueba de interfaz) y comportamiento del slider dentro de `ScrollView`/`List` (junto a T-015).
+
+## Hallazgos de la revisión independiente de T-011
+Corregidos en `fix/review-T-011`: con valores de segmento repetidos el control se rompía (un segmento no se dibujaba y aparecía una píldora sin etiqueta; ahora se identifican por posición y solo se resalta el primero), el área pulsable de un segmento no seleccionado era solo el texto (añadido `contentShape`), `reduceMotion` ignorado, `segmentHeight` ausente del init `titles:`, y documentación (sombras, selección sin coincidencia, duplicados).
+- [ ] T-031 Dynamic Type en `NeuroSegmentedControl`: `lineLimit(1)` recorta títulos con tamaños grandes; valorar `minimumScaleFactor` o disposición vertical (parte de T-014).
+- [ ] T-032 Verificar en un dispositivo que VoiceOver anuncia "seleccionado" en el segmento activo (el rasgo está sobre un `Button`).
+- [ ] T-033 Tests que faltan en `NeuroSegmentedControl`: estado pulsado (opacidad 0.6) y cambio de selección con un binding con estado.
