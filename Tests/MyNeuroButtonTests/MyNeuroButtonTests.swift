@@ -94,4 +94,22 @@ final class MyNeuroButtonTests: XCTestCase {
         let button = MyNeuroButton(icon: "star", iconFull: "star.fill") {}
         XCTAssertEqual(button.iconFilled, "star.fill")
     }
+
+    /// Raw pixel bytes of a rendered view, used to prove that a theme really changes the output.
+    private func pixels<V: View>(_ view: V) -> Data? {
+        let renderer = ImageRenderer(content: view.padding(30))
+        renderer.scale = 1
+        return renderer.cgImage?.dataProvider?.data as Data?
+    }
+
+    func testEnvironmentThemeChangesRenderedButton() throws {
+        let themed = NeumorphicTheme(cornerRadius: 45)
+        let plain = try XCTUnwrap(pixels(MyNeuroButton(icon: "star", iconFilled: "star.fill") {}))
+        let viaEnvironment = try XCTUnwrap(
+            pixels(MyNeuroButton(icon: "star", iconFilled: "star.fill") {}.neumorphicTheme(themed)))
+        let explicit = try XCTUnwrap(
+            pixels(MyNeuroButton(icon: "star", iconFilled: "star.fill", theme: themed) {}))
+        XCTAssertNotEqual(plain, viaEnvironment, "environment theme must reach the button")
+        XCTAssertEqual(viaEnvironment, explicit)
+    }
 }

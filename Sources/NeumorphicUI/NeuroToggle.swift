@@ -46,7 +46,7 @@ public struct NeuroToggle: View {
         fillColor: Color = .blue,
         width: CGFloat = 100,
         height: CGFloat = 100,
-        theme: NeumorphicTheme = .default
+        theme: NeumorphicTheme? = nil
     ) {
         self.icon = icon
         self.iconFilled = iconFilled
