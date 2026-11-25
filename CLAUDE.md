@@ -1,5 +1,21 @@
 # MyNeuroUI — CLAUDE.md
 
+Guidance for AI agents working in this repo. Read `SPEC.md`, `ARCHITECTURE.md` and `tasks.md` before changing code (see also `AGENTS.md`).
+
+## Workflow
+1. Pick ONE task from `tasks.md`. Create branch `feat/T-xxx-short-name`.
+2. If the task changes structure or a contract, update `ARCHITECTURE.md` (and add an ADR) **before** the code.
+3. Write tests with the code, never after.
+4. Run the full check before declaring done: `swift build && swift test`, plus the linter once configured (F0-4) and iOS/tvOS builds once CI covers them (F0-5).
+5. Have the change reviewed by a different agent than the one that wrote it (`.claude/agents/`, checklists in `docs/reviews/`). Fix findings, then update `tasks.md`.
+
+## Hard rules
+- Never read, print or commit credentials or keys.
+- Components import only `NeumorphicCore`; `NeumorphicUI` and `MyNeuroButton` never import each other.
+- Zero external dependencies. No `AnyView`. No inline shadows or scale: use `NeumorphicSurface` / `NeumorphicInset`.
+- Don't expand scope: if you find unrelated problems, add a line to `tasks.md` instead of fixing them.
+- Keep `MyNeuroButton` and its deprecated `iconFull` init until the next major version.
+
 ## Project Overview
 
 Swift Package Manager library providing neumorphic-styled SwiftUI components with SF Symbol support, smooth press animations, and a shared design token system. Distributed as an open-source package on GitHub.
