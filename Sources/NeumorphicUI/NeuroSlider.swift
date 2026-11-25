@@ -6,13 +6,19 @@ import SwiftUI
 /// Dragging anywhere on the track moves the knob. With `step` set, values snap to
 /// `range.lowerBound + n * step`. VoiceOver can adjust it with swipe up and down, and on tvOS the
 /// remote's left and right directions move it.
+///
+/// The drag takes the touch immediately, so a vertical swipe that starts on the slider will not
+/// scroll a surrounding `ScrollView` or `List`. The knob's shadow extends a few points past the
+/// slider's frame; leave some room around it inside clipped containers.
 @MainActor
 public struct NeuroSlider: View {
 
     // MARK: - Private Properties
 
     @Environment(\.neumorphicTheme) private var environmentTheme
-    @State private var isDragging = false
+    @Environment(\.layoutDirection) private var layoutDirection
+    /// Resets by itself if SwiftUI cancels the gesture, so the knob can never stay stuck in its pressed look.
+    @GestureState private var isDragging = false
     private let explicitTheme: NeumorphicTheme?
 
     // MARK: - Public Properties
@@ -88,18 +94,23 @@ public struct NeuroSlider: View {
         let clamped = min(max(value, range.lowerBound), range.upperBound)
         guard let step, step > 0, step.isFinite else { return clamped }
         let steps = ((clamped - range.lowerBound) / step).rounded()
-        return min(range.lowerBound + steps * step, range.upperBound)
+        let snapped = range.lowerBound + steps * step
+        // Remove floating point noise such as 0.30000000000000004 from step = 0.1.
+        let clean = (snapped * 1e9).rounded() / 1e9
+        return min(clean, range.upperBound)
     }
 
     /// Value that corresponds to a touch at horizontal position `x`. The knob centre travels
-    /// between `knobSize / 2` and `width - knobSize / 2`.
+    /// between `knobSize / 2` and `width - knobSize / 2`. In a right-to-left layout the lower
+    /// bound sits on the right edge, so the position is mirrored.
     static func value(
         atPosition x: CGFloat, width: CGFloat, knobSize: CGFloat,
-        in range: ClosedRange<Double>, step: Double?
+        in range: ClosedRange<Double>, step: Double?, isRightToLeft: Bool = false
     ) -> Double {
         let usable = Double(width - knobSize)
         guard usable > 0 else { return range.lowerBound }
-        let fraction = min(max((Double(x) - Double(knobSize) / 2) / usable, 0), 1)
+        let position = isRightToLeft ? Double(width - x) : Double(x)
+        let fraction = min(max((position - Double(knobSize) / 2) / usable, 0), 1)
         let raw = range.lowerBound + fraction * (range.upperBound - range.lowerBound)
         return snapped(raw, in: range, step: step)
     }
@@ -110,7 +121,12 @@ public struct NeuroSlider: View {
         _ value: Double, direction: Int, in range: ClosedRange<Double>, step: Double?
     ) -> Double {
         let span = range.upperBound - range.lowerBound
-        let size = (step.map { $0 > 0 && $0.isFinite } ?? false) ? step! : span / 10
+        let size: Double
+        if let step, step > 0, step.isFinite {
+            size = step
+        } else {
+            size = span / 10
+        }
         let moved = snapped(value, in: range, step: step) + Double(direction) * size
         return snapped(moved, in: range, step: step)
     }
@@ -144,6 +160,7 @@ public struct NeuroSlider: View {
                     .frame(width: knobSize, height: knobSize)
                     .neumorphicSurface(theme: knobRelief, isPressed: isDragging)
                     .offset(x: knobX)
+                    .animation(.easeInOut(duration: resolved.animationDuration), value: isDragging)
             }
             .frame(width: proxy.size.width, height: proxy.size.height, alignment: .leading)
             .contentShape(Rectangle())
@@ -151,14 +168,14 @@ public struct NeuroSlider: View {
             // tvOS has no DragGesture; the remote's left/right directions drive the slider there.
             .gesture(
                 DragGesture(minimumDistance: 0)
+                    .updating($isDragging) { _, state, _ in state = true }
                     .onChanged { drag in
-                        setDragging(true, theme: resolved)
                         let new = Self.value(
                             atPosition: drag.location.x, width: proxy.size.width,
-                            knobSize: knobSize, in: range, step: step)
+                            knobSize: knobSize, in: range, step: step,
+                            isRightToLeft: layoutDirection == .rightToLeft)
                         if new != value { value = new }
                     }
-                    .onEnded { _ in setDragging(false, theme: resolved) }
             )
             #endif
         }
@@ -169,13 +186,6 @@ public struct NeuroSlider: View {
             adjust: { direction in
                 value = Self.adjusted(value, direction: direction, in: range, step: step)
             }))
-    }
-
-    private func setDragging(_ dragging: Bool, theme: NeumorphicTheme) {
-        guard dragging != isDragging else { return }
-        withAnimation(.easeInOut(duration: theme.animationDuration)) {
-            isDragging = dragging
-        }
     }
 }
 

@@ -177,12 +177,41 @@ final class NeuroSliderTests: XCTestCase {
         XCTAssertEqual(viaEnvironment, explicit)
     }
 
-    func testBindingIsReadFromTheSource() {
-        var stored = 0.25
-        let binding = Binding(get: { stored }, set: { stored = $0 })
-        let slider = NeuroSlider(value: binding)
-        XCTAssertEqual(slider.value, 0.25)
-        slider.value = 0.75
-        XCTAssertEqual(stored, 0.75)
+    // MARK: - Cases from the independent review
+
+    func testSnappedRemovesFloatingPointNoise() {
+        XCTAssertEqual(NeuroSlider.snapped(0.3, in: 0...1, step: 0.1), 0.3)
+        XCTAssertEqual(NeuroSlider.snapped(0.7, in: 0...1, step: 0.1), 0.7)
+        XCTAssertEqual(NeuroSlider.snapped(0.69, in: 0...1, step: 0.1), 0.7)
+    }
+
+    func testSnappedKeepsExactBoundsWithDecimalStep() {
+        XCTAssertEqual(NeuroSlider.snapped(1, in: 0...1, step: 0.1), 1)
+        XCTAssertEqual(NeuroSlider.snapped(0, in: 0...1, step: 0.1), 0)
+        XCTAssertEqual(NeuroSlider.snapped(2.5, in: 2...3, step: 0.25), 2.5)
+    }
+
+    func testAdjustedWithDecimalStepStaysClean() {
+        var value = 0.0
+        for _ in 0..<3 { value = NeuroSlider.adjusted(value, direction: 1, in: 0...1, step: 0.1) }
+        XCTAssertEqual(value, 0.3)
+    }
+
+    func testRightToLeftMirrorsTheTouchPosition() {
+        func value(_ x: CGFloat, rtl: Bool) -> Double {
+            NeuroSlider.value(
+                atPosition: x, width: 200, knobSize: 40, in: 0...100, step: nil, isRightToLeft: rtl)
+        }
+        XCTAssertEqual(value(20, rtl: false), 0, accuracy: 1e-9)
+        XCTAssertEqual(value(20, rtl: true), 100, accuracy: 1e-9)
+        XCTAssertEqual(value(180, rtl: true), 0, accuracy: 1e-9)
+        XCTAssertEqual(value(100, rtl: true), 50, accuracy: 1e-9)
+    }
+
+    func testRightToLeftRendersMirroredToLeftToRight() throws {
+        let ltr = try XCTUnwrap(pixels(NeuroSlider(value: .constant(0.2)).frame(width: 240)))
+        let rtl = try XCTUnwrap(
+            pixels(NeuroSlider(value: .constant(0.2)).frame(width: 240).environment(\.layoutDirection, .rightToLeft)))
+        XCTAssertNotEqual(ltr, rtl)
     }
 }

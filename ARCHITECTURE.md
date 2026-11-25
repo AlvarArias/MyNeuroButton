@@ -16,12 +16,13 @@ Reglas:
 ## Piezas clave
 - `NeumorphicTheme` (struct `Sendable`): fondo, foreground, radios, duración de animación, radios de sombra.
 - `NeumorphicSurface`: superficie elevada/presionada (escala + par de sombras).
-- `NeumorphicInset`: superficie hundida (sombra interior). Para TextField, Slider y Progress.
+- `NeumorphicInset<S: Shape>`: superficie hundida (sombra interior) en cualquier forma; `.neumorphicInset(theme:)` usa `RoundedRectangle` y `.neumorphicInset(in:theme:)` acepta otra forma. Para TextField, Slider y Progress.
+- Componentes de `NeumorphicUI`: `NeuroToggle`, `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress`, `NeuroSlider`. Helper interno `NeumorphicTheme.cappingShadow(at:)` (`NeumorphicTheme+Relief.swift`) limita el radio de sombra de elementos pequeños (badge: 4, pomo del slider: 5).
 - Tema por `Environment` (ADR-003), presets `.default` y `.dark` (ADR-005).
 - `NeuroPressable` (ADR-006): botón con seguimiento de pulsación y resolución de tema, base de los componentes pulsables.
 
 ## Patrón de componente
-`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), los componentes pulsables se construyen sobre `NeuroPressable` (que encapsula `Button` + `onLongPressGesture(minimumDuration: 0)`, no `ButtonStyle`, y la resolución de tema); estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
+`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), los componentes pulsables se construyen sobre `NeuroPressable` (que encapsula `Button` + `onLongPressGesture(minimumDuration: 0)`, no `ButtonStyle`, y la resolución de tema); estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine; excepción: `NeuroSlider` no tiene `DragGesture` en tvOS y se controla con `onMoveCommand` (izquierda/derecha del mando) sobre una vista `focusable()` que aún no tiene indicador visual de foco (tarea T-026).
 
 ## ADRs
 ### ADR-001 — Core separado de UI
@@ -31,7 +32,7 @@ Estado: aceptada. Los tokens y modifiers viven aparte para reutilizarlos sin arr
 Los componentes "hundidos" (TextField, Slider, Progress) necesitan un modifier inset en Core en vez de sombras propias.
 Decisión: `NeumorphicInset` (ViewModifier) + `View.neumorphicInset(theme:)`. Pinta como fondo del contenido un `RoundedRectangle(theme.cornerRadius)` relleno con `theme.background`, con dos trazos desenfocados y recortados a la forma: oscuro desplazado hacia dentro desde arriba-izquierda, claro desde abajo-derecha. Es el espejo de `NeumorphicSurface`.
 Nuevo token `NeumorphicTheme.insetShadowRadius` (por defecto 5), añadido al final del `init` con valor por defecto, sin romper llamadas existentes. El desplazamiento es `insetShadowRadius / 2`.
-Enmienda (T-019): `NeumorphicInset` es genérico sobre la forma (`S: Shape`). `.neumorphicInset(theme:)` sigue usando `RoundedRectangle(theme.cornerRadius)`; `.neumorphicInset(in: shape, theme:)` acepta cualquier forma (`Capsule`, un anillo...). Ningún componente dibuja sombras interiores por su cuenta ni copia el tema para cambiar `cornerRadius`; si necesita otra forma, la pasa aquí. Resuelve los hallazgos de la revisión independiente sobre `NeuroProgress`.
+Enmienda (T-019): el texto anterior describe la versión inicial con `RoundedRectangle` fija; hoy `NeumorphicInset` es genérico sobre la forma (`S: Shape`). `.neumorphicInset(theme:)` sigue usando `RoundedRectangle(theme.cornerRadius)`; `.neumorphicInset(in: shape, theme:)` acepta cualquier forma (`Capsule`, un anillo...). Ningún componente dibuja sombras interiores por su cuenta ni copia el tema para cambiar `cornerRadius`; si necesita otra forma, la pasa aquí. Resuelve los hallazgos de la revisión independiente sobre `NeuroProgress`. Rotura de código fuente aceptada: el tipo `NeumorphicInset` pasó a ser genérico, así que escribirlo sin parámetro de tipo en una anotación ya no compila; `NeumorphicInset()`, `NeumorphicInset(theme:)` y `.neumorphicInset(theme:)` siguen funcionando. Se trata como minor porque ningún consumidor conocido usa el tipo directamente.
 
 ### ADR-003 — Tema por Environment (aceptada, T-004)
 Evita pasar `theme:` a cada componente en una app; `theme:` explícito queda como override.

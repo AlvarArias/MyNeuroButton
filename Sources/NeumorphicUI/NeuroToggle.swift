@@ -26,7 +26,8 @@ public struct NeuroToggle: View {
     /// Button height in points
     public let height: CGFloat
 
-    /// Design tokens used when no environment theme applies. Explicit theme passed at init, else `.default`.
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
     public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     /// Binding that drives on/off state
