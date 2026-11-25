@@ -6,7 +6,7 @@ Librería SwiftUI (Swift Package) de componentes neumórficos reutilizables en c
 ## Alcance (dentro)
 - Tokens (`NeumorphicTheme`), modifiers de superficie (elevada y hundida) y extensiones de `Color` en `NeumorphicCore`.
 - Componentes en `NeumorphicUI`: `NeuroToggle` (existe) y los previstos en `tasks.md` (Card, Badge, Divider, Progress, Slider, SegmentedControl, TextField, Stepper, TabBar).
-- Plataformas: iOS, macOS, tvOS (mínimo actual 26; ver T-002).
+- Plataformas: iOS, macOS, tvOS (mínimo iOS 17, macOS 14, tvOS 17; ver ADR-004).
 - Tests unitarios por componente.
 
 ## Fuera de alcance

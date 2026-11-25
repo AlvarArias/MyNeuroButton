@@ -4,9 +4,9 @@ import PackageDescription
 let package = Package(
     name: "MyNeuroUI",
     platforms: [
-        .iOS(.v26),
-        .macOS(.v26),
-        .tvOS(.v26)
+        .iOS(.v17),
+        .macOS(.v14),
+        .tvOS(.v17)
     ],
     products: [
         .library(name: "NeumorphicCore", targets: ["NeumorphicCore"]),

@@ -31,8 +31,12 @@ Los componentes "hundidos" (TextField, Slider, Progress) necesitan un modifier i
 ### ADR-003 — Tema por Environment (pendiente, T-004)
 Evita pasar `theme:` a cada componente en una app; `theme:` explícito queda como override.
 
-### ADR-004 — Mínimo de plataforma (pendiente, T-002)
-Bajar de 26 a 17/18 si no se usan APIs de 26. Subir/bajar el mínimo es cambio de contrato: requiere ADR y versión major si se sube.
+### ADR-004 — Mínimo de plataforma: iOS 17 / macOS 14 / tvOS 17 (aceptada, T-002)
+Contexto: el mínimo era 26 sin que ninguna API lo exigiera (T-001: compila hasta iOS 15/macOS 12/tvOS 15).
+Decisión: bajar a iOS 17, macOS 14, tvOS 17. Bajar el mínimo no rompe a los consumidores actuales (cambio minor).
+Por qué 17 y no menos: da acceso a `@Observable`, `sensoryFeedback`, `onChange` de dos parámetros y mejoras de gestos para los componentes de las fases siguientes, y cubre la mayoría de apps en uso.
+visionOS: no se añade por ahora; no hay CI ni necesidad. Reabrir si una app lo pide.
+Subir el mínimo en el futuro sí requiere nuevo ADR y versión major.
 
 ## Versionado
 SemVer. Añadir API = minor. Subir mínimo de plataforma o quitar `MyNeuroButton` = major.
