@@ -26,14 +26,14 @@ public struct NeumorphicInset: ViewModifier {
                 .fill(theme.background)
                 .overlay {
                     shape
-                        .stroke(Color.black.opacity(0.3), lineWidth: radius)
+                        .stroke(theme.shadowColor.opacity(0.3), lineWidth: radius)
                         .blur(radius: radius / 2)
                         .offset(x: offset, y: offset)
                         .mask(shape)
                 }
                 .overlay {
                     shape
-                        .stroke(Color.white.opacity(0.8), lineWidth: radius)
+                        .stroke(theme.highlightColor.opacity(0.8), lineWidth: radius)
                         .blur(radius: radius / 2)
                         .offset(x: -offset, y: -offset)
                         .mask(shape)

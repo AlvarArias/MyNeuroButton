@@ -17,7 +17,8 @@ Reglas:
 - `NeumorphicTheme` (struct `Sendable`): fondo, foreground, radios, duración de animación, radios de sombra.
 - `NeumorphicSurface`: superficie elevada/presionada (escala + par de sombras).
 - `NeumorphicInset`: superficie hundida (sombra interior). Para TextField, Slider y Progress.
-- Previsto: tema por `Environment`, `NeuroPressable` interno.
+- Tema por `Environment` (ADR-003), presets `.default` y `.dark` (ADR-005).
+- Previsto: `NeuroPressable` interno.
 
 ## Patrón de componente
 `@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), estado de presión con `onLongPressGesture(minimumDuration: 0)` (no `ButtonStyle`), estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine.
@@ -37,6 +38,11 @@ Decisión: `EnvironmentValues.neumorphicTheme` (`@Entry`, por defecto `.default`
 Los componentes cambian el parámetro `theme: NeumorphicTheme = .default` por `theme: NeumorphicTheme? = nil` (compatible a nivel de código fuente). Resolución: tema explícito si lo hay; si no, el del Environment. La propiedad pública `theme` sigue siendo `NeumorphicTheme` no opcional (devuelve el explícito o `.default`) para no romper a quien la lea.
 Los modifiers `NeumorphicSurface` y `NeumorphicInset` siguen recibiendo el tema explícito; los componentes les pasan el ya resuelto.
 Regla para componentes nuevos: `theme: NeumorphicTheme? = nil` + `@Environment(\.neumorphicTheme)`.
+
+### ADR-005 — Modo oscuro por preset y modificador adaptativo (aceptada, T-005)
+Decisión: no hacer los colores del tema "dinámicos". Se añaden dos tokens, `shadowColor` (por defecto `.black`) y `highlightColor` (por defecto `.white`), que `NeumorphicSurface` y `NeumorphicInset` usan en lugar de negro/blanco fijos. Se añade el preset `NeumorphicTheme.dark` (fondo oscuro, luz tenue) y el modificador `View.neumorphicTheme(light:dark:)`, que elige el tema según `colorScheme` e inyecta el resultado en el Environment (ADR-003).
+Por qué: mantiene `NeumorphicTheme` como valor simple y `Equatable`, sin depender de UIColor/NSColor, y el modo oscuro es explícito (la app decide). El tema por defecto no cambia: ninguna app existente cambia de aspecto.
+Las opacidades de las sombras siguen en los modifiers; el preset oscuro baja la intensidad de la luz con un `highlightColor` semitransparente.
 
 ### ADR-004 — Mínimo de plataforma: iOS 17 / macOS 14 / tvOS 17 (aceptada, T-002)
 Contexto: el mínimo era 26 sin que ninguna API lo exigiera (T-001: compila hasta iOS 15/macOS 12/tvOS 15).

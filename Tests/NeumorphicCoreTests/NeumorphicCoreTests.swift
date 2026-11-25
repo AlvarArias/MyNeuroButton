@@ -105,4 +105,40 @@ final class NeumorphicCoreTests: XCTestCase {
         let view = Text("Hi").neumorphicTheme(NeumorphicTheme(cornerRadius: 3)).frame(width: 40, height: 20)
         XCTAssertNotNil(ImageRenderer(content: view).cgImage)
     }
+
+    // MARK: - Dark mode
+
+    func testShadowColorTokensDefaultToBlackAndWhite() {
+        XCTAssertEqual(NeumorphicTheme.default.shadowColor, .black)
+        XCTAssertEqual(NeumorphicTheme.default.highlightColor, .white)
+    }
+
+    func testDarkPresetDiffersFromDefault() {
+        XCTAssertNotEqual(NeumorphicTheme.dark, NeumorphicTheme.default)
+        XCTAssertNotEqual(NeumorphicTheme.dark.background, NeumorphicTheme.default.background)
+    }
+
+    func testDarkPresetKeepsGeometryTokens() {
+        XCTAssertEqual(NeumorphicTheme.dark.cornerRadius, NeumorphicTheme.default.cornerRadius)
+        XCTAssertEqual(NeumorphicTheme.dark.normalShadowRadius, NeumorphicTheme.default.normalShadowRadius)
+    }
+
+    func testAdaptiveThemePicksByColorScheme() {
+        let modifier = AdaptiveNeumorphicTheme()
+        XCTAssertEqual(modifier.theme(for: .light), .default)
+        XCTAssertEqual(modifier.theme(for: .dark), .dark)
+    }
+
+    func testAdaptiveThemeCustomPair() {
+        let light = NeumorphicTheme(cornerRadius: 1)
+        let dark = NeumorphicTheme(cornerRadius: 2)
+        let modifier = AdaptiveNeumorphicTheme(light: light, dark: dark)
+        XCTAssertEqual(modifier.theme(for: .light), light)
+        XCTAssertEqual(modifier.theme(for: .dark), dark)
+    }
+
+    func testAdaptiveViewModifierRenders() {
+        let view = Text("Hi").neumorphicTheme().frame(width: 40, height: 20)
+        XCTAssertNotNil(ImageRenderer(content: view).cgImage)
+    }
 }

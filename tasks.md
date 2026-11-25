@@ -17,7 +17,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004 (`feat/T-002-platform-minimum`): iOS 17 / macOS 14 / tvOS 17, visionOS no por ahora
 - [x] T-003 `NeumorphicInset` en Core + tests + ADR-002 (`feat/T-003-neumorphic-inset`)
 - [x] T-004 Tema por `Environment` + ADR-003 (`feat/T-004-theme-environment`)
-- [ ] T-005 Modo oscuro en `NeumorphicTheme`
+- [x] T-005 Modo oscuro en `NeumorphicTheme` (`feat/T-005-dark-mode`)
 - [ ] T-006 Extraer `NeuroPressable`
 - [ ] T-007 `NeuroCard`
 - [ ] T-008 `NeuroBadge` / `NeuroDivider`
@@ -30,7 +30,9 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
 - [ ] T-016 README con galería + release
 - [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
+- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de la Fase 1
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
 - README dice Xcode 16+ pero `swift-tools-version: 6.2` exige Xcode 26; corregir el README o bajar tools-version (hallado en T-002).
+- CLAUDE.md "Public API" sigue describiendo el tema antiguo: sincronizar con `NeumorphicInset`, `neumorphicTheme` (Environment), `.dark` y los tokens nuevos (T-018, hallado al cerrar la Fase 1).

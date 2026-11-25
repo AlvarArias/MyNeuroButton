@@ -17,13 +17,13 @@ public struct NeumorphicSurface: ViewModifier {
         return content
             .scaleEffect(isPressed ? 0.95 : 1.0)
             .shadow(
-                color: Color.black.opacity(isPressed ? 0.1 : 0.3),
+                color: theme.shadowColor.opacity(isPressed ? 0.1 : 0.3),
                 radius: radius,
                 x: radius,
                 y: radius
             )
             .shadow(
-                color: Color.white.opacity(isPressed ? 0.4 : 0.8),
+                color: theme.highlightColor.opacity(isPressed ? 0.4 : 0.8),
                 radius: radius,
                 x: -(radius / 2),
                 y: -(radius / 2)
