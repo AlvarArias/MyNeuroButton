@@ -21,7 +21,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-006 Extraer `NeuroPressable` (`feat/T-006-neuro-pressable`)
 - [x] T-007 `NeuroCard` (`feat/T-007-neuro-card`)
 - [x] T-008 `NeuroBadge` / `NeuroDivider` (`feat/T-008-badge-divider`)
-- [ ] T-009 `NeuroProgress`
+- [x] T-009 `NeuroProgress` (`feat/T-009-neuro-progress`)
 - [ ] T-010 `NeuroSlider`
 - [ ] T-011 `NeuroSegmentedControl`
 - [ ] T-012 `NeuroTextField`
@@ -36,3 +36,4 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
 - README dice Xcode 16+ pero `swift-tools-version: 6.2` exige Xcode 26; corregir el README o bajar tools-version (hallado en T-002).
 - CLAUDE.md "Public API" sigue describiendo el tema antiguo: sincronizar con `NeumorphicInset`, `neumorphicTheme` (Environment), `.dark` y los tokens nuevos (T-018, hallado al cerrar la Fase 1).
+- `NeuroProgress` usa textos de accesibilidad fijos en inglés ("Progress", "N percent"): localizarlos y permitir `accessibilityLabel` propio (hallado en T-009; encaja con T-014).
