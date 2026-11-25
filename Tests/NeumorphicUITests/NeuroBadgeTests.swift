@@ -47,10 +47,18 @@ final class NeuroBadgeTests: XCTestCase {
         XCTAssertEqual(viaEnvironment, explicit)
     }
 
-    func testSmallReliefCapsShadowRadius() {
-        let big = NeumorphicTheme(normalShadowRadius: 20)
-        XCTAssertEqual(NeuroBadge.smallRelief(of: big).normalShadowRadius, 4)
-        XCTAssertEqual(NeuroBadge.smallRelief(of: NeumorphicTheme(normalShadowRadius: 2)).normalShadowRadius, 2)
-        XCTAssertEqual(NeuroBadge.smallRelief(of: big).cornerRadius, big.cornerRadius)
+    func testCappingShadowLimitsBothRadii() {
+        let big = NeumorphicTheme(normalShadowRadius: 20, pressedShadowRadius: 9)
+        let capped = big.cappingShadow(at: 4)
+        XCTAssertEqual(capped.normalShadowRadius, 4)
+        XCTAssertEqual(capped.pressedShadowRadius, 4)
+        XCTAssertEqual(capped.cornerRadius, big.cornerRadius)
+    }
+
+    func testCappingShadowLeavesSmallerRadiiAlone() {
+        let small = NeumorphicTheme(normalShadowRadius: 2, pressedShadowRadius: 1)
+        let capped = small.cappingShadow(at: 4)
+        XCTAssertEqual(capped.normalShadowRadius, 2)
+        XCTAssertEqual(capped.pressedShadowRadius, 1)
     }
 }

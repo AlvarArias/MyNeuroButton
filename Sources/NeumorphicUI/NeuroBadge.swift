@@ -47,18 +47,12 @@ public struct NeuroBadge: View {
         self.explicitTheme = theme
     }
 
-    /// Badges are small: cap the shadow so it does not swallow the label.
-    static func smallRelief(of theme: NeumorphicTheme) -> NeumorphicTheme {
-        var relief = theme
-        relief.normalShadowRadius = min(theme.normalShadowRadius, 4)
-        return relief
-    }
-
     // MARK: - Body
 
     public var body: some View {
         let resolved = explicitTheme ?? environmentTheme
-        let relief = Self.smallRelief(of: resolved)
+        // Badges are small: cap the shadow so it does not swallow the label.
+        let relief = resolved.cappingShadow(at: 4)
 
         HStack(spacing: 4) {
             if let systemImage {

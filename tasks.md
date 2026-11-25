@@ -22,7 +22,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-007 `NeuroCard` (`feat/T-007-neuro-card`)
 - [x] T-008 `NeuroBadge` / `NeuroDivider` (`feat/T-008-badge-divider`)
 - [x] T-009 `NeuroProgress` (`feat/T-009-neuro-progress`)
-- [ ] T-010 `NeuroSlider`
+- [x] T-010 `NeuroSlider` (`feat/T-010-neuro-slider`; arrastre solo verificado por lógica pura, no con dedo real)
 - [ ] T-011 `NeuroSegmentedControl`
 - [ ] T-012 `NeuroTextField`
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
@@ -47,3 +47,4 @@ Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor
 - [ ] T-023 `reduceMotion`: `NeuroProgress` y `NeuroToggle` animan siempre; leer `accessibilityReduceMotion` (encaja con T-014).
 - [ ] T-024 Test helper `pixels` repetido en 5 archivos de test: moverlo a un `TestSupport.swift` por target.
 - [ ] T-025 Docs: añadir los 4 componentes nuevos al árbol y a "Public API" de CLAUDE.md, y un ADR para la técnica del anillo y el patrón de copiar el tema (incluido en T-018).
+- `NeuroProgress` debería formatear su valor de accesibilidad con `.percent` como hace `NeuroSlider` (localizado) en vez de "N percent" fijo (hallado en T-010; parte de T-014).
