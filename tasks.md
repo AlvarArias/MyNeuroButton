@@ -34,7 +34,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-011 `NeuroSegmentedControl` (`feat/T-011-segmented-control`; toque y animación de la píldora solo verificados por lógica y render, sin revisión independiente todavía)
   - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `SegmentView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. Píldora deslizante, área de toque completa, títulos largos, 6 segmentos, solo iconos, "Reducir movimiento" y VoiceOver (Accessibility Inspector).
     - Sin probar todavía: Dynamic Type con tamaños de texto grandes (T-031) y VoiceOver real en iPhone (T-032).
-- [ ] T-012 `NeuroTextField`
+- [x] T-012 `NeuroTextField` (`feat/T-012-neuro-textfield`; foco, estado de error, `NeumorphicInset`, textos como `LocalizedStringKey` por D4; foco y teclado solo verificados por compilación y render, sin revisión independiente todavía)
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
 - [ ] T-014 Accesibilidad transversal
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
@@ -65,7 +65,7 @@ Corregidos en `fix/review-T-010`: el arrastre ignoraba `layoutDirection` (en der
 - [ ] T-026 tvOS: `NeuroSlider` es `focusable()` pero no muestra foco; añadir indicador visual (p. ej. `@Environment(\.isFocused)` en una vista hija) y probarlo en un Apple TV o simulador.
 - [ ] T-027 `NeuroSlider` y `NeuroSegmentedControl` sin `accessibilityLabel` de grupo; el slider sin etiqueta por defecto: VoiceOver solo dice "ajustable, 50 %". `NeuroProgress` sí tiene "Progress". Decidir una política común (T-014).
 - [ ] T-028 Nombres de tamaño inconsistentes: `NeuroSlider` usa `trackHeight`/`knobSize`, `NeuroProgress` usa `thickness` y `NeuroToggle` usa `width`/`height`. Decidir si se unifican.
-- [ ] T-029 `NeuroBadge` y `NeuroSegment` (y `titles:` de `NeuroSegmentedControl`) reciben `String`, no `LocalizedStringKey`: no se pueden localizar por clave.
+- [ ] T-029 **Decidido: sí, localizar por clave (2026-11-26).** Los componentes nuevos usan `LocalizedStringKey` (empezando por `NeuroTextField`); falta migrar `NeuroBadge`, `NeuroSegment` y `titles:` de `NeuroSegmentedControl`. Antes: `NeuroBadge` y `NeuroSegment` (y `titles:` de `NeuroSegmentedControl`) reciben `String`, no `LocalizedStringKey`: no se pueden localizar por clave.
 - [ ] T-030 Tests que faltan: ruta arrastre → binding (no testeable sin un gesto real; valorar una prueba de interfaz) y comportamiento del slider dentro de `ScrollView`/`List` (junto a T-015).
 
 ## Hallazgos de la revisión independiente de T-011
@@ -73,3 +73,10 @@ Corregidos en `fix/review-T-011`: con valores de segmento repetidos el control s
 - [ ] T-031 Dynamic Type en `NeuroSegmentedControl`: `lineLimit(1)` recorta títulos con tamaños grandes; valorar `minimumScaleFactor` o disposición vertical (parte de T-014).
 - [ ] T-032 Verificar en un dispositivo que VoiceOver anuncia "seleccionado" en el segmento activo (el rasgo está sobre un `Button`).
 - [ ] T-033 Tests que faltan en `NeuroSegmentedControl`: estado pulsado (opacidad 0.6) y cambio de selección con un binding con estado.
+
+## Decisiones del propietario (2026-11-26)
+- D1 Mínimo iOS 17 / macOS 14 / tvOS 17: se mantiene (ADR-004). D2 visionOS queda fuera por ahora. D3 `NeuroPressable` se queda en `NeumorphicCore` (ADR-006). D4 Localización por `LocalizedStringKey` (T-029).
+- Flujo: nada se fusiona en `main` sin PR; el propietario prueba y comenta cada PR. Cadena T-001..T-011 en el PR #4; `chore/F0-2..F0-4` en los PR #5, #6 y #7.
+
+## Tareas nuevas
+- [ ] T-034 Halo alrededor del icono de `NeuroToggle` (la sombra se aplica a toda la cara del botón, icono incluido; ya venía así antes de la Fase 1). **Primero lo prueba y lo valora el propietario**; solo se arregla si le molesta.
