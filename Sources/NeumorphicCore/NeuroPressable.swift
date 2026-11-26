@@ -45,9 +45,13 @@ public struct NeuroPressable<Content: View>: View {
                 #endif
         }
         .buttonStyle(.plain)
-        #if !os(tvOS)
-        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
-        // engine provides feedback there and `action` fires on select.
+        #if os(tvOS)
+        // The system focus platter is a large white rounded rectangle that ignores the
+        // neumorphic shape; `FocusScale` above shows focus instead.
+        .focusEffectDisabled()
+        #else
+        // Touch-down feedback. tvOS has no press-and-hold gesture API (see above): there
+        // focus is the feedback and `action` fires on select.
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
             withAnimation(.easeInOut(duration: theme.animationDuration)) {
                 isPressed = pressing
