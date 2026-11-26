@@ -2,9 +2,9 @@
 
 ![Swift](https://img.shields.io/badge/Swift-6.0-orange?style=flat&logo=swift)
 ![SPM](https://img.shields.io/badge/SwiftPM-compatible-brightgreen?style=flat)
-![iOS](https://img.shields.io/badge/iOS-26+-blue?style=flat&logo=apple)
-![macOS](https://img.shields.io/badge/macOS-26+-blue?style=flat&logo=apple)
-![tvOS](https://img.shields.io/badge/tvOS-26+-blue?style=flat&logo=apple)
+![iOS](https://img.shields.io/badge/iOS-17+-blue?style=flat&logo=apple)
+![macOS](https://img.shields.io/badge/macOS-14+-blue?style=flat&logo=apple)
+![tvOS](https://img.shields.io/badge/tvOS-17+-blue?style=flat&logo=apple)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat)
 
 A customizable SwiftUI button component with neumorphic design and smooth animations. Supports SF Symbols, adjustable size and color, and runs on iOS, macOS, and tvOS.
@@ -27,9 +27,9 @@ A customizable SwiftUI button component with neumorphic design and smooth animat
 | Requirement | Minimum version |
 |-------------|----------------|
 | Swift       | 6.0            |
-| iOS         | 26+            |
-| macOS       | 26+            |
-| tvOS        | 26+            |
+| iOS         | 17+            |
+| macOS       | 14+            |
+| tvOS        | 17+            |
 | Xcode       | 16+            |
 
 ---
