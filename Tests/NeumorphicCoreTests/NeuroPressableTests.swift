@@ -41,4 +41,18 @@ final class NeuroPressableTests: XCTestCase {
         }
         XCTAssertNotNil(ImageRenderer(content: view).cgImage)
     }
+
+    func testFocusedScaleGrowsTheControl() {
+        XCTAssertGreaterThan(NeuroPressable<Text>.focusedScale, 1)
+    }
+
+    func testFocusScaleLeavesAnUnfocusedViewUntouched() throws {
+        let plain = try XCTUnwrap(ImageRenderer(content: Color.red.frame(width: 40, height: 40)).cgImage)
+        let wrapped = try XCTUnwrap(
+            ImageRenderer(
+                content: Color.red.frame(width: 40, height: 40).modifier(FocusScale(scale: 1.5, duration: 0.1))
+            ).cgImage)
+        XCTAssertEqual(plain.width, wrapped.width)
+        XCTAssertEqual(plain.height, wrapped.height)
+    }
 }
