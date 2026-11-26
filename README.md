@@ -26,11 +26,11 @@ A customizable SwiftUI button component with neumorphic design and smooth animat
 
 | Requirement | Minimum version |
 |-------------|----------------|
-| Swift       | 6.0            |
+| Swift       | 6.2            |
 | iOS         | 17+            |
 | macOS       | 14+            |
 | tvOS        | 17+            |
-| Xcode       | 16+            |
+| Xcode       | 26+            |
 
 ---
 
