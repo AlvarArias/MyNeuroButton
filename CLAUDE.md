@@ -14,7 +14,7 @@ Swift Package Manager library providing neumorphic-styled SwiftUI components wit
 | `Tests/MyNeuroButtonTests/` | XCTest | Tests for backward-compat `MyNeuroButton` |
 
 **Frameworks:** SwiftUI  
-**Platforms:** iOS 26+, macOS 26+, tvOS 26+  
+**Platforms:** iOS 17+, macOS 14+, tvOS 17+  
 **Swift version:** 6.2 (strict concurrency: complete)  
 **External dependencies:** none
 
