@@ -44,12 +44,14 @@ public struct NeuroPressable<Content: View>: View {
                 .modifier(FocusScale(scale: Self.focusedScale, duration: theme.animationDuration))
                 #endif
         }
-        .buttonStyle(.plain)
         #if os(tvOS)
-        // The system focus platter is a large white rounded rectangle that ignores the
-        // neumorphic shape; `FocusScale` above shows focus instead.
+        // `.plain` on tvOS draws a large white rounded platter on focus that ignores the
+        // neumorphic shape (and `focusEffectDisabled()` does not remove it). A custom style
+        // has no platter; `FocusScale` above shows focus instead.
+        .buttonStyle(BareButtonStyle())
         .focusEffectDisabled()
         #else
+        .buttonStyle(.plain)
         // Touch-down feedback. tvOS has no press-and-hold gesture API (see above): there
         // focus is the feedback and `action` fires on select.
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
@@ -74,5 +76,12 @@ struct FocusScale: ViewModifier {
         content
             .scaleEffect(isFocused ? scale : 1)
             .animation(reduceMotion ? nil : .easeInOut(duration: duration), value: isFocused)
+    }
+}
+
+/// Button style that adds nothing: no platter, no press dimming.
+struct BareButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
