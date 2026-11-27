@@ -16,11 +16,13 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Para T-004: `@Entry` requiere Xcode 16+ pero hace back-deploy.
 - [x] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004 (`feat/T-002-platform-minimum`): iOS 17 / macOS 14 / tvOS 17, visionOS no por ahora
 - [x] T-003 `NeumorphicInset` en Core + tests + ADR-002 (`feat/T-003-neumorphic-inset`)
+  - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `InsetView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. `.neumorphicInset()` en rectángulo redondeado y `Capsule`, dentro de `ScrollView` y de `List`: la sombra interior no se recorta, ni en reposo ni al entrar y salir de pantalla; también en modo oscuro.
 - [x] T-004 Tema por `Environment` + ADR-003 (`feat/T-004-theme-environment`)
 - [x] T-005 Modo oscuro en `NeumorphicTheme` (`feat/T-005-dark-mode`)
 - [x] T-006 Extraer `NeuroPressable` (`feat/T-006-neuro-pressable`)
 - [x] T-007 `NeuroCard` (`feat/T-007-neuro-card`)
 - [x] T-008 `NeuroBadge` / `NeuroDivider` (`feat/T-008-badge-divider`)
+  - Prueba manual del propietario de T-007 y T-008 (2026-11-27, app `NeuroPlayground,` con `CardView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK con contenido real y Dynamic Type grande. Tarjeta con texto largo, badges con icono y color, badge con texto muy largo, divisor horizontal y vertical, tarjeta anidada, sombras al hacer scroll y modo oscuro.
 - [x] T-009 `NeuroProgress` (`feat/T-009-neuro-progress`)
   - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `ProgressView2`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. Valores 0, 1 y fuera de rango (-0.3 y 1.7) en barra y anillo, surco del anillo, anillo fino (4) y grueso (30), y modo oscuro con `.neumorphicTheme()`.
 - [x] T-010 `NeuroSlider` (`feat/T-010-neuro-slider` + `fix/review-T-010`; arrastre solo verificado por lógica pura, no con dedo real; tvOS solo compila)
@@ -35,6 +37,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
 - [ ] T-014 Accesibilidad transversal
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
+  - Avance: `NeumorphicInset` ya probado dentro de `ScrollView` y `List` sin recorte (ver T-003), y `NeuroCard`/`NeuroBadge`/`NeuroDivider` en `ScrollView` (ver T-008). Falta probar las sombras externas de `NeumorphicSurface` (`NeuroToggle`, `MyNeuroButton`) y `NeuroSlider` dentro de `List` y de `ScrollView`.
 - [ ] T-016 README con galería + release
 - [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
 - [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 a 3 (incluye `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress` y `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona)
