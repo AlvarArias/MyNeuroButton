@@ -198,7 +198,7 @@ All components are `@MainActor public struct … : View` in `NeumorphicUI` (exce
 Notes that are easy to get wrong:
 - `NeuroToggle`: the surface stays depressed while `isOn == true`: `.neumorphicSurface(theme: theme, isPressed: isPressed || isOn)`.
 - `NeuroProgress`: `value` is a plain `Double` (not a binding), clamped to `0...total`; a non-positive `total` counts as empty.
-- `NeuroSlider`: on tvOS it is controlled with `onMoveCommand` (left/right) and shows no focus indicator yet (T-026). Drag respects `layoutDirection`. Exposes VoiceOver `adjustable` actions.
+- `NeuroSlider`: on tvOS it is controlled with `onMoveCommand` (left/right) and shows focus by growing its knob (`focusedKnobScale`, honours Reduce Motion; T-026). Drag respects `layoutDirection`. Exposes VoiceOver `adjustable` actions.
 - `NeuroSegmentedControl`: segments are identified by position, so duplicate values do not break it (only the first is highlighted). Respects Reduce Motion.
 - `NeuroTextField`: `title` is a `LocalizedStringKey` (T-029 decision: new components localize by key). `errorMessage` is exposed to VoiceOver as a hint.
 - Small elements (badge, slider knob, segmented pill) cap their shadow radius with the internal `cappingShadow(at:)` so the shadow does not swallow them.

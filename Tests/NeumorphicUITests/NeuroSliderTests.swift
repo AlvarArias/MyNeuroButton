@@ -214,4 +214,10 @@ final class NeuroSliderTests: XCTestCase {
             pixels(NeuroSlider(value: .constant(0.2)).frame(width: 240).environment(\.layoutDirection, .rightToLeft)))
         XCTAssertNotEqual(ltr, rtl)
     }
+
+    // MARK: - tvOS focus
+
+    func testFocusedKnobScaleGrowsTheKnob() {
+        XCTAssertGreaterThan(NeuroSlider.focusedKnobScale, 1)
+    }
 }

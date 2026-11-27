@@ -22,7 +22,7 @@ Reglas:
 - `NeuroPressable` (ADR-006): botón con seguimiento de pulsación y resolución de tema, base de los componentes pulsables.
 
 ## Patrón de componente
-`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), los componentes pulsables se construyen sobre `NeuroPressable` (que encapsula `Button` + `onLongPressGesture(minimumDuration: 0)`, no `ButtonStyle`, y la resolución de tema); estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine; excepción: `NeuroSlider` no tiene `DragGesture` en tvOS y se controla con `onMoveCommand` (izquierda/derecha del mando) sobre una vista `focusable()` que aún no tiene indicador visual de foco (tarea T-026).
+`@MainActor struct Neuro<Nombre>: View`, parámetro `theme: NeumorphicTheme? = nil` (cae al Environment), los componentes pulsables se construyen sobre `NeuroPressable` (que encapsula `Button` + `onLongPressGesture(minimumDuration: 0)`, no `ButtonStyle`, y la resolución de tema); estilo solo vía modifiers de Core. En tvOS el feedback lo da el focus engine; excepción: `NeuroSlider` no tiene `DragGesture` en tvOS y se controla con `onMoveCommand` (izquierda/derecha del mando) sobre una vista `focusable()`; el foco se ve porque el pomo crece (`focusedKnobScale`, 1.4; respeta Reducir movimiento) en vez de agrandar todo el control, para que un slider de ancho completo no se salga de la pantalla (T-026).
 
 ## ADRs
 ### ADR-001 — Core separado de UI
