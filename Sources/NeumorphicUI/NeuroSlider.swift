@@ -5,7 +5,7 @@ import SwiftUI
 ///
 /// Dragging anywhere on the track moves the knob. With `step` set, values snap to
 /// `range.lowerBound + n * step`. VoiceOver can adjust it with swipe up and down, and on tvOS the
-/// remote's left and right directions move it.
+/// remote's left and right directions move it; while focused, the knob grows so you can tell which control is selected.
 ///
 /// The drag takes the touch immediately, so a vertical swipe that starts on the slider will not
 /// scroll a surrounding `ScrollView` or `List`. The knob's shadow extends a few points past the
@@ -78,6 +78,12 @@ public struct NeuroSlider: View {
         self.accessibilityLabel = accessibilityLabel
         self.explicitTheme = theme
     }
+
+    // MARK: - Focus
+
+    /// Scale of the knob while the slider holds focus on tvOS. The knob is the only part that
+    /// grows, so a full-width slider never overflows the screen. Unused on other platforms.
+    static var focusedKnobScale: CGFloat { 1.4 }
 
     // MARK: - Slider math
 
@@ -159,6 +165,9 @@ public struct NeuroSlider: View {
                     .fill(resolved.background)
                     .frame(width: knobSize, height: knobSize)
                     .neumorphicSurface(theme: knobRelief, isPressed: isDragging)
+                    #if os(tvOS)
+                    .modifier(KnobFocusScale(scale: Self.focusedKnobScale, duration: resolved.animationDuration))
+                    #endif
                     .offset(x: knobX)
                     .animation(.easeInOut(duration: resolved.animationDuration), value: isDragging)
             }
@@ -188,6 +197,23 @@ public struct NeuroSlider: View {
             }))
     }
 }
+
+#if os(tvOS)
+/// Grows its content while the enclosing focusable view holds focus.
+/// Must sit inside the `focusable()` view so `isFocused` reflects the slider.
+private struct KnobFocusScale: ViewModifier {
+    @Environment(\.isFocused) private var isFocused
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let scale: CGFloat
+    let duration: Double
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isFocused ? scale : 1)
+            .animation(reduceMotion ? nil : .easeInOut(duration: duration), value: isFocused)
+    }
+}
+#endif
 
 /// VoiceOver adjustment, percentage value and (on tvOS) remote-control support.
 private struct SliderAccessibility: ViewModifier {
