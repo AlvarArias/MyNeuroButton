@@ -45,7 +45,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
-- README dice Xcode 16+ pero `swift-tools-version: 6.2` exige Xcode 26; corregir el README o bajar tools-version (hallado en T-002).
+- [x] README decía Xcode 16+ y Swift 6.0 pero `swift-tools-version: 6.2` exige Xcode 26 y Swift 6.2: README corregido (`fix/readme-xcode-version`).
 - CLAUDE.md "Public API" sigue describiendo el tema antiguo: sincronizar con `NeumorphicInset`, `neumorphicTheme` (Environment), `.dark` y los tokens nuevos (T-018, hallado al cerrar la Fase 1).
 - `NeuroProgress` usa textos de accesibilidad fijos en inglés ("Progress", "N percent"): localizarlos y permitir `accessibilityLabel` propio (hallado en T-009; encaja con T-014).
 
