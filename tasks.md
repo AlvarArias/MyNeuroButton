@@ -15,6 +15,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Verificado compilando `MyNeuroUI-Package` para iOS Simulator, tvOS Simulator y macOS con mínimos iOS 15/macOS 12/tvOS 15, 16/13/16 y 17/14/17: los tres compilan.
   - Para T-004: `@Entry` requiere Xcode 16+ pero hace back-deploy.
 - [x] T-002 Decidir mínimo de plataforma (y visionOS) + ADR-004 (`feat/T-002-platform-minimum`): iOS 17 / macOS 14 / tvOS 17, visionOS no por ahora
+  - Compilación verificada (2026-11-27, Xcode 26.4, rama `fix/review-T-011`): `xcodebuild -scheme MyNeuroUI-Package` con destino iPhone 15 Pro (iOS 17.4) termina con `BUILD SUCCEEDED` (`-target arm64-apple-ios17.0-simulator`, SDK 26.4). Solo compilación: no se ha ejecutado la app en un runtime de iOS 17.4.
 - [x] T-003 `NeumorphicInset` en Core + tests + ADR-002 (`feat/T-003-neumorphic-inset`)
   - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `InsetView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. `.neumorphicInset()` en rectángulo redondeado y `Capsule`, dentro de `ScrollView` y de `List`: la sombra interior no se recorta, ni en reposo ni al entrar y salir de pantalla; también en modo oscuro.
 - [x] T-004 Tema por `Environment` + ADR-003 (`feat/T-004-theme-environment`)
