@@ -35,6 +35,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `SegmentView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. Píldora deslizante, área de toque completa, títulos largos, 6 segmentos, solo iconos, "Reducir movimiento" y VoiceOver (Accessibility Inspector).
     - Sin probar todavía: Dynamic Type con tamaños de texto grandes (T-031) y VoiceOver real en iPhone (T-032).
 - [x] T-012 `NeuroTextField` (`feat/T-012-neuro-textfield`; foco, estado de error, `NeumorphicInset`, textos como `LocalizedStringKey` por D4; foco y teclado solo verificados por compilación y render, sin revisión independiente todavía)
+  - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `TextFieldView`, paquete local en `feat/T-012-neuro-textfield`, simulador iPhone 17 Pro y Apple TV): todo OK. Anillo de foco y teclado, error en rojo con mensaje, `isSecure`, `.keyboardType(.emailAddress)` desde fuera, modo oscuro, Dynamic Type grande, derecha a izquierda, "Reducir movimiento", VoiceOver (Accessibility Inspector), recorte dentro de `ScrollView`/`List` y foco con teclado del sistema en tvOS.
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
 - [ ] T-014 Accesibilidad transversal
 - [ ] T-015 Prueba en ScrollView/List (recorte de sombras)
