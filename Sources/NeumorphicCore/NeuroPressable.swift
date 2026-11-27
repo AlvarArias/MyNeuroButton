@@ -26,6 +26,10 @@ public struct NeuroPressable<Content: View>: View {
         self.label = label
     }
 
+    /// Scale of the control while it holds focus. tvOS has no press gesture and the neumorphic
+    /// label draws nothing the focus engine can show, so focus is made visible by growing it.
+    static var focusedScale: CGFloat { 1.1 }
+
     /// Explicit theme if given, otherwise the one from the environment.
     static func resolve(explicit: NeumorphicTheme?, environment: NeumorphicTheme) -> NeumorphicTheme {
         explicit ?? environment
@@ -36,16 +40,48 @@ public struct NeuroPressable<Content: View>: View {
 
         Button(action: action) {
             label(isPressed, theme)
+                #if os(tvOS)
+                .modifier(FocusScale(scale: Self.focusedScale, duration: theme.animationDuration))
+                #endif
         }
+        #if os(tvOS)
+        // `.plain` on tvOS draws a large white rounded platter on focus that ignores the
+        // neumorphic shape (and `focusEffectDisabled()` does not remove it). A custom style
+        // has no platter; `FocusScale` above shows focus instead.
+        .buttonStyle(BareButtonStyle())
+        .focusEffectDisabled()
+        #else
         .buttonStyle(.plain)
-        #if !os(tvOS)
-        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
-        // engine provides feedback there and `action` fires on select.
+        // Touch-down feedback. tvOS has no press-and-hold gesture API (see above): there
+        // focus is the feedback and `action` fires on select.
         .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
             withAnimation(.easeInOut(duration: theme.animationDuration)) {
                 isPressed = pressing
             }
         }, perform: {})
         #endif
+    }
+}
+
+/// Grows its content while the enclosing focusable control holds focus.
+/// Must be applied inside the control's label so `isFocused` reflects that control.
+struct FocusScale: ViewModifier {
+    @Environment(\.isFocused) private var isFocused
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    let scale: CGFloat
+    let duration: Double
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isFocused ? scale : 1)
+            .animation(reduceMotion ? nil : .easeInOut(duration: duration), value: isFocused)
+    }
+}
+
+/// Button style that adds nothing: no platter, no press dimming.
+struct BareButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
