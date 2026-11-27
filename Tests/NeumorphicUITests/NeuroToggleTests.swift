@@ -59,4 +59,51 @@ final class NeuroToggleTests: XCTestCase {
 
         XCTAssertTrue(state)
     }
+
+    func testExplicitThemeIsStored() {
+        let custom = NeumorphicTheme(cornerRadius: 22)
+        let toggle = NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false), theme: custom)
+        XCTAssertEqual(toggle.theme, custom)
+    }
+
+    func testToggleWithoutThemeReportsDefault() {
+        let toggle = NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false))
+        XCTAssertEqual(toggle.theme, .default)
+    }
+
+    func testToggleRendersWithEnvironmentTheme() {
+        let view = NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(true))
+            .neumorphicTheme(NeumorphicTheme(cornerRadius: 40))
+        XCTAssertNotNil(ImageRenderer(content: view).cgImage)
+    }
+
+    /// Raw pixel bytes of a rendered view, used to prove that a theme really changes the output.
+    private func pixels<V: View>(_ view: V) -> Data? {
+        let renderer = ImageRenderer(content: view.padding(30))
+        renderer.scale = 1
+        return renderer.cgImage?.dataProvider?.data as Data?
+    }
+
+    func testEnvironmentThemeChangesRenderedToggle() throws {
+        let themed = NeumorphicTheme(cornerRadius: 45)
+        func toggle() -> NeuroToggle { NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false)) }
+
+        let plain = try XCTUnwrap(pixels(toggle()))
+        let viaEnvironment = try XCTUnwrap(pixels(toggle().neumorphicTheme(themed)))
+        let explicit = try XCTUnwrap(pixels(
+            NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false), theme: themed)))
+
+        XCTAssertNotEqual(plain, viaEnvironment, "environment theme must reach the toggle")
+        XCTAssertEqual(viaEnvironment, explicit)
+    }
+
+    func testExplicitThemeBeatsEnvironmentTheme() throws {
+        let explicit = NeumorphicTheme(cornerRadius: 45)
+        let withEnvironment = try XCTUnwrap(pixels(
+            NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false), theme: explicit)
+                .neumorphicTheme(NeumorphicTheme(cornerRadius: 0))))
+        let withoutEnvironment = try XCTUnwrap(pixels(
+            NeuroToggle(icon: "star", iconFilled: "star.fill", isOn: .constant(false), theme: explicit)))
+        XCTAssertEqual(withEnvironment, withoutEnvironment)
+    }
 }

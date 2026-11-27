@@ -7,7 +7,7 @@ public struct NeuroToggle: View {
 
     // MARK: - Private Properties
 
-    @State private var isPressed = false
+    private let explicitTheme: NeumorphicTheme?
 
     // MARK: - Public Properties
 
@@ -26,8 +26,9 @@ public struct NeuroToggle: View {
     /// Button height in points
     public let height: CGFloat
 
-    /// Design tokens controlling shadows, corner radius, and animation
-    public let theme: NeumorphicTheme
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     /// Binding that drives on/off state
     @Binding public var isOn: Bool
@@ -41,7 +42,7 @@ public struct NeuroToggle: View {
         fillColor: Color = .blue,
         width: CGFloat = 100,
         height: CGFloat = 100,
-        theme: NeumorphicTheme = .default
+        theme: NeumorphicTheme? = nil
     ) {
         self.icon = icon
         self.iconFilled = iconFilled
@@ -49,17 +50,15 @@ public struct NeuroToggle: View {
         self.fillColor = fillColor
         self.width = width
         self.height = height
-        self.theme = theme
+        self.explicitTheme = theme
     }
 
     // MARK: - Body
 
     public var body: some View {
-        Button {
-            withAnimation(.easeInOut(duration: theme.animationDuration)) {
-                isOn.toggle()
-            }
-        } label: {
+        NeuroPressable(theme: explicitTheme) {
+            isOn.toggle()
+        } label: { isPressed, theme in
             ZStack {
                 RoundedRectangle(cornerRadius: theme.cornerRadius)
                     .fill(isOn ? fillColor : theme.background)
@@ -71,16 +70,7 @@ public struct NeuroToggle: View {
             .frame(width: width, height: height)
             // Surface looks pressed while either the finger is down OR the toggle is on
             .neumorphicSurface(theme: theme, isPressed: isPressed || isOn)
+            .animation(.easeInOut(duration: theme.animationDuration), value: isOn)
         }
-        .buttonStyle(.plain)
-        #if !os(tvOS)
-        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
-        // engine provides feedback there and `action` fires on select.
-        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            withAnimation(.easeInOut(duration: theme.animationDuration)) {
-                isPressed = pressing
-            }
-        }, perform: {})
-        #endif
     }
 }

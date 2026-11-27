@@ -7,7 +7,7 @@ public struct MyNeuroButton: View {
 
     // MARK: - Private Properties
 
-    @State private var isPressed = false
+    private let explicitTheme: NeumorphicTheme?
 
     // MARK: - Public Properties
 
@@ -26,8 +26,9 @@ public struct MyNeuroButton: View {
     /// Button height in points
     public let height: CGFloat
 
-    /// Design tokens controlling shadows, corner radius, and animation
-    public let theme: NeumorphicTheme
+    /// Theme given at init, or `.default` when none was given. When none was given the
+    /// environment theme is applied at render time (ADR-003), which this property cannot see.
+    public var theme: NeumorphicTheme { explicitTheme ?? .default }
 
     /// Action executed on tap
     public let action: @MainActor () -> Void
@@ -40,7 +41,7 @@ public struct MyNeuroButton: View {
         fillColor: Color = .blue,
         width: CGFloat = 100,
         height: CGFloat = 100,
-        theme: NeumorphicTheme = .default,
+        theme: NeumorphicTheme? = nil,
         action: @escaping @MainActor () -> Void
     ) {
         self.icon = icon
@@ -48,7 +49,7 @@ public struct MyNeuroButton: View {
         self.fillColor = fillColor
         self.width = width
         self.height = height
-        self.theme = theme
+        self.explicitTheme = theme
         self.action = action
     }
 
@@ -74,7 +75,7 @@ public struct MyNeuroButton: View {
     // MARK: - Body
 
     public var body: some View {
-        Button(action: action) {
+        NeuroPressable(theme: explicitTheme, action: action) { isPressed, theme in
             ZStack {
                 RoundedRectangle(cornerRadius: theme.cornerRadius)
                     .fill(isPressed ? fillColor : theme.background)
@@ -86,15 +87,5 @@ public struct MyNeuroButton: View {
             .frame(width: width, height: height)
             .neumorphicSurface(theme: theme, isPressed: isPressed)
         }
-        .buttonStyle(.plain)
-        #if !os(tvOS)
-        // Touch-down feedback. tvOS has no press-and-hold gesture API; the focus
-        // engine provides feedback there and `action` fires on select.
-        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            withAnimation(.easeInOut(duration: theme.animationDuration)) {
-                isPressed = pressing
-            }
-        }, perform: {})
-        #endif
     }
 }
