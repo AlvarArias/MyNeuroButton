@@ -22,8 +22,15 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 - [x] T-007 `NeuroCard` (`feat/T-007-neuro-card`)
 - [x] T-008 `NeuroBadge` / `NeuroDivider` (`feat/T-008-badge-divider`)
 - [x] T-009 `NeuroProgress` (`feat/T-009-neuro-progress`)
+  - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `ProgressView2`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. Valores 0, 1 y fuera de rango (-0.3 y 1.7) en barra y anillo, surco del anillo, anillo fino (4) y grueso (30), y modo oscuro con `.neumorphicTheme()`.
 - [x] T-010 `NeuroSlider` (`feat/T-010-neuro-slider` + `fix/review-T-010`; arrastre solo verificado por lógica pura, no con dedo real; tvOS solo compila)
+  - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con el paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4):
+    - Arrastre con paso: OK. "Paso 0.1" marcó 0,6 y "Rango 20…80" con paso 5 marcó 65, sin ruido de coma flotante.
+    - Accesibilidad en Accessibility Inspector: OK. Etiqueta "Volumen", valor "61 %", rasgo Adjustable y acciones Increment/Decrement. Increment y Decrement funcionan y cambian el valor.
+    - Sin probar todavía: arrastre desde cualquier punto de la pista, límites, dentro de `ScrollView`, derecha a izquierda, VoiceOver real en iPhone (T-032) y mando de tvOS.
 - [x] T-011 `NeuroSegmentedControl` (`feat/T-011-segmented-control`; toque y animación de la píldora solo verificados por lógica y render, sin revisión independiente todavía)
+  - Prueba manual del propietario (2026-11-27, app `NeuroPlayground,` con `SegmentView`, paquete local en `fix/review-T-011`, simulador iPhone 17 Pro, iOS 26.4): todo OK. Píldora deslizante, área de toque completa, títulos largos, 6 segmentos, solo iconos, "Reducir movimiento" y VoiceOver (Accessibility Inspector).
+    - Sin probar todavía: Dynamic Type con tamaños de texto grandes (T-031) y VoiceOver real en iPhone (T-032).
 - [ ] T-012 `NeuroTextField`
 - [ ] T-013 `NeuroStepper` / `NeuroTabBar`
 - [ ] T-014 Accesibilidad transversal
