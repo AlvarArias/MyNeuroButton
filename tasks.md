@@ -42,7 +42,7 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
   - Avance: `NeumorphicInset` ya probado dentro de `ScrollView` y `List` sin recorte (ver T-003), y `NeuroCard`/`NeuroBadge`/`NeuroDivider` en `ScrollView` (ver T-008). Falta probar las sombras externas de `NeumorphicSurface` (`NeuroToggle`, `MyNeuroButton`) y `NeuroSlider` dentro de `List` y de `ScrollView`.
 - [ ] T-016 README con galería + release
 - [ ] T-017 Aplicar `swift format` a NeuroToggle, MyNeuroButton y NeumorphicSurface y pasar el lint a `--strict` en el hook (viene de F0-4)
-- [ ] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 a 3 (incluye `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress` y `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona)
+- [x] T-018 Sincronizar la sección "Public API" de CLAUDE.md con la API de las Fases 1 a 3 (incluye `NeuroCard`, `NeuroBadge`, `NeuroDivider`, `NeuroProgress` y `NeuroPressable`: CLAUDE.md aún dice que cada componente repite el gesto de pulsación y la receta "Adding a new component" no lo menciona) Hecho en `feat/T-018-claude-md-api`: CLAUDE.md describe `NeumorphicInset`, tema por Environment, `.dark`, tokens nuevos, `NeuroPressable` y los 8 componentes de `NeumorphicUI`; árbol, receta "Adding a new component" y patrones actualizados.
 
 ## Hallazgos fuera de alcance
 (añadir aquí líneas en vez de arreglarlas en otra tarea)
@@ -58,7 +58,7 @@ Corregidos en `fix/review-T-007-T-009`: casos límite de `NeuroProgress` (grosor
 - [ ] T-022 Constantes mágicas: topes de sombra de `cappingShadow(at:)` (badge 4, pomo del slider 5, píldora del segmented 5; además espaciado 6, opacidad 0.6 y relleno de pista 4 de `NeuroSegmentedControl`), opacidades 0.25/0.8 del divider y 0.3/0.8 de las sombras. Pasarlas a tokens o a una única fuente en Core.
 - [ ] T-023 `reduceMotion`: `NeuroProgress`, `NeuroToggle` y `NeuroSlider` animan siempre (`NeuroSegmentedControl` ya respeta `reduceMotion`); leer `accessibilityReduceMotion` (encaja con T-014).
 - [ ] T-024 Test helper `pixels` repetido en 5 archivos de test: moverlo a un `TestSupport.swift` por target.
-- [ ] T-025 Docs: añadir los 5 componentes nuevos (incluido `NeuroSlider`) al árbol y a "Public API" de CLAUDE.md, (incluido en T-018); el ADR-002 ya cubre la técnica del anillo y `cappingShadow(at:)` está descrito en "Piezas clave".
+- [x] T-025 Docs: añadir los 5 componentes nuevos (incluido `NeuroSlider`) al árbol y a "Public API" de CLAUDE.md, (incluido en T-018); el ADR-002 ya cubre la técnica del anillo y `cappingShadow(at:)` está descrito en "Piezas clave". Incluido en T-018.
 - `NeuroProgress` debería formatear su valor de accesibilidad con `.percent` como hace `NeuroSlider` (localizado) en vez de "N percent" fijo (hallado en T-010; parte de T-014).
 
 ## Hallazgos de la revisión independiente de T-019, T-020 y T-010
