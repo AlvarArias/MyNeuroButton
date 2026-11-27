@@ -4,9 +4,9 @@ Una tarea = una rama `feat/T-xxx-nombre`. Estado: [ ] pendiente, [~] en curso, [
 
 ## Fase 0 — Estructura de agente
 - [x] F0-1 SPEC, ARCHITECTURE, tasks, AGENTS (`chore/F0-1-project-docs`)
-- [ ] F0-2 Ampliar CLAUDE.md (workflow y reglas duras)
-- [ ] F0-3 `.claude/agents/` y `docs/reviews/`
-- [x] F0-4 Linter/formatter y `.githooks` (rama `chore/F0-4-lint-hooks`; el lint solo avisa: quedan diffs de formato en NeuroToggle, MyNeuroButton y NeumorphicSurface)
+- [x] F0-2 Ampliar CLAUDE.md (workflow y reglas duras) (PR #5)
+- [x] F0-3 `.claude/agents/` y `docs/reviews/` (PR #6)
+- [x] F0-4 Linter/formatter y `.githooks` (PR #7; el lint solo avisa: quedan diffs de formato en NeuroToggle, MyNeuroButton y NeumorphicSurface)
 - [x] F0-5 CI iOS/tvOS (ya resuelto upstream en `e1625ca`)
 
 ## Fases de producto
@@ -72,5 +72,5 @@ Corregidos en `fix/review-T-010`: el arrastre ignoraba `layoutDirection` (en der
 Corregidos en `fix/review-T-011`: con valores de segmento repetidos el control se rompía (un segmento no se dibujaba y aparecía una píldora sin etiqueta; ahora se identifican por posición y solo se resalta el primero), el área pulsable de un segmento no seleccionado era solo el texto (añadido `contentShape`), `reduceMotion` ignorado, `segmentHeight` ausente del init `titles:`, y documentación (sombras, selección sin coincidencia, duplicados).
 - [ ] T-031 Dynamic Type en `NeuroSegmentedControl`: `lineLimit(1)` recorta títulos con tamaños grandes; valorar `minimumScaleFactor` o disposición vertical (parte de T-014).
 - [ ] T-032 Verificar en un dispositivo que VoiceOver anuncia "seleccionado" en el segmento activo (el rasgo está sobre un `Button`).
-- [x] T-035 (`fix/tvos-focus-indicator`) tvOS: `NeuroToggle` y `MyNeuroButton` no mostraban foco (probado por el propietario en el simulador: «no se ve ningún foco»). `NeuroPressable` agranda el control un 10 % mientras tiene foco y quita el borde blanco del sistema (estilo de botón propio en tvOS: `focusEffectDisabled` solo no bastaba), que era grande y no seguía la forma del botón (visto por el propietario en el simulador; el Canvas de Xcode no muestra el foco). Solo compila y se prueba su lógica; el aspecto real hay que verlo en el simulador. `NeuroSlider` sigue pendiente (T-026).
+- [x] T-035 (`fix/tvos-focus-indicator`) tvOS: `NeuroToggle` y `MyNeuroButton` no mostraban foco (probado por el propietario en el simulador: «no se ve ningún foco»). `NeuroPressable` agranda el control un 10 % mientras tiene foco y quita el borde blanco del sistema (estilo de botón propio en tvOS: `focusEffectDisabled` solo no bastaba), que era grande y no seguía la forma del botón (visto por el propietario en el simulador; el Canvas de Xcode no muestra el foco). Fusionado en el PR #11. Prueba manual del propietario en el simulador de tvOS (2026-11-27): OK. `NeuroSlider` sigue pendiente (T-026).
 - [ ] T-033 Tests que faltan en `NeuroSegmentedControl`: estado pulsado (opacidad 0.6) y cambio de selección con un binding con estado.
